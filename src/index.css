@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+ul {
+    @apply list-disc;
+}
+
+ol {
+    @apply list-decimal;
+}
+
+p {
+    @apply my-[16px] mx-0;
+}
+
+h3 {
+    @apply font-bold text-2xl;
+}
+
+.react-tel-input .form-control {
+    @apply !w-full py-6 !text-base;
+}
+
+.opt-container {
+    @apply flex justify-between gap-2;
+}
+
+.opt-container input {
+    @apply !mr-0 flex-1 py-5 outline-none;
+}
