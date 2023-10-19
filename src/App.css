@@ -1,0 +1,23 @@
+#markdown textarea {
+  outline: none !important;
+}
+
+#markdown button {
+  padding: 5px 10px !important;
+}
+
+.active {
+  background-color: red;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+#markdown1 a {
+  text-decoration: underline !important;
+  color: rgb(48, 113, 218) !important;
+}
+
+#markdown1 a:hover {
+
+  color: rgb(65, 65, 222) !important;
+}
