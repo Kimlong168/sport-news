@@ -1,11 +1,10 @@
-import { auth } from "../firebase-config";
-import Markdown from "markdown-to-jsx";
 import { Link } from "react-router-dom";
 import Layout from "../Layouts/Layout";
 import TableHead from "../components/TableHead";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-const Result = ({ isAuth, deltePost, resultList }) => {
+import PropTypes from "prop-types";
+const Result = ({ deltePost, resultList }) => {
   const notify = (id) =>
     toast.error(
       <>
@@ -50,7 +49,7 @@ const Result = ({ isAuth, deltePost, resultList }) => {
                 <th className="px-4 py-3">Result</th>
                 <th className="px-4 py-3">Team B</th>
                 <th className="px-4 py-3">Title</th>
-       
+
                 <th className="px-4 py-3">Edit</th>
                 <th className="px-4 py-3">Delete</th>
               </tr>
@@ -78,7 +77,7 @@ const Result = ({ isAuth, deltePost, resultList }) => {
 
                     <td className="px-4 py-3">{post.teamB}</td>
                     <td className="px-4 py-3">{post.title}</td>
-              
+
                     <td className="px-4 py-3 text-sm text-center">
                       <Link to={`/update_result/${post.id}`}>
                         <div className="px-2 py-1.5 rounded bg-green-600 text-white">
@@ -118,5 +117,8 @@ const Result = ({ isAuth, deltePost, resultList }) => {
     </Layout>
   );
 };
-
+Result.propTypes = {
+  deltePost: PropTypes.func.isRequired,
+  resultList: PropTypes.array.isRequired,
+};
 export default Result;

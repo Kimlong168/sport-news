@@ -1,30 +1,60 @@
-import { useState } from "react";
-import { setDoc, doc } from "firebase/firestore";
+import { useEffect, useState } from "react";
+import { setDoc, doc, getDoc } from "firebase/firestore";
 import { db, storage } from "../firebase-config";
 import {
-  getStorage,
   ref,
   deleteObject,
   uploadBytes,
   getDownloadURL,
 } from "firebase/storage";
-import {} from "firebase/storage";
+import { BsTrash } from "react-icons/bs";
+import { IoMdAddCircleOutline } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import Layout from "../Layouts/Layout";
-import WidgetGroup from "../components/WidgetGroup";
 import { useParams } from "react-router-dom";
+import PropTypes from "prop-types";
+import Loading from "../components/Loading";
 
-const UpdateAuthor = ({ authorList, setIsUpdated }) => {
+const UpdateAuthor = ({ setIsUpdated }) => {
   const { id: authorParam } = useParams();
-  const author = authorList.filter((post) => post.id === authorParam)[0];
+  // const author = authorList.filter((post) => post.id === authorParam)[0];
 
-  const [fullName, setfullName] = useState(author.fullName);
+  const [fullName, setfullName] = useState("");
   const [profilePicture, setProfilePicture] = useState(null);
-  const [bio, setBio] = useState(author.bio);
-  const [position, setPosition] = useState(author.position);
-  const [links, setLinks] = useState(author.links);
+  const [bio, setBio] = useState("");
+  const [position, setPosition] = useState("");
+  const [links, setLinks] = useState("");
+  const [authorId, setAuthorId] = useState("");
 
-  const authorId = author.authorId;
+  let navigate = useNavigate();
+  // fetch data from firebase based on id
+  useEffect(() => {
+    const docRef = doc(db, "authors", authorParam);
+
+    const fetchData = async () => {
+      try {
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+
+          setfullName(data.fullName);
+          // setProfilePicture(data.profilePicture);
+          setBio(data.bio);
+          setPosition(data.position);
+          setLinks(data.links);
+          setAuthorId(data.authorId);
+          console.log("data", data);
+        } else {
+          console.log("No such document!");
+        }
+      } catch (error) {
+        console.error("Error fetching document:", error);
+      }
+    };
+
+    fetchData();
+  }, [authorParam]);
+
   const addLink = () => {
     setLinks([...links, { title: "", url: "" }]);
   };
@@ -39,8 +69,6 @@ const UpdateAuthor = ({ authorList, setIsUpdated }) => {
     updatedLinks[index][field] = value;
     setLinks(updatedLinks);
   };
-
-  let navigate = useNavigate();
 
   async function updateAuthor(id) {
     const docRef = doc(db, "authors", id);
@@ -107,6 +135,15 @@ const UpdateAuthor = ({ authorList, setIsUpdated }) => {
     setIsUpdated((prev) => !prev);
   }
 
+  // loading
+  if (!fullName) {
+    return (
+      <Layout>
+        <Loading />
+      </Layout>
+    );
+  }
+
   return (
     <Layout>
       <div className="text-gray-900  border-gray-700 mt-6 rounded">
@@ -149,40 +186,47 @@ const UpdateAuthor = ({ authorList, setIsUpdated }) => {
 
             <h2 className="font-bold text-xl flex items-center justify-between mb-2">
               Social Media
-              <button onClick={addLink}>➕</button>
+              <button
+                className="uppercase text-sm text-green-600 flex items-center gap-2"
+                onClick={addLink}
+              >
+                Add Link
+                <IoMdAddCircleOutline color="green" size="20" />
+              </button>
             </h2>
             <div className="flex flex-col gap-1">
-              {links.map((link, index) => (
-                <div key={index} className="flex gap-4">
-                  <input
-                    className="border border-gray-700 p-2 rounded w-full outline-none mb-5"
-                    type="text"
-                    placeholder="Link title eg(Facebook,Tiktok,...)"
-                    value={link.title}
-                    onChange={(e) =>
-                      handleLinkChange(index, "title", e.target.value)
-                    }
-                  />
-                  <input
-                    className="border border-gray-700 p-2 rounded w-full outline-none mb-5"
-                    type="text"
-                    placeholder="URL"
-                    value={link.url}
-                    onChange={(e) =>
-                      handleLinkChange(index, "url", e.target.value)
-                    }
-                  />
-                  {links.length > 1 && (
-                    <button
-                      className="text-gradient"
-                      title="remove link"
-                      onClick={() => removeLink(index)}
-                    >
-                      ✖️
-                    </button>
-                  )}
-                </div>
-              ))}
+              {links &&
+                links.map((link, index) => (
+                  <div key={index} className="flex gap-4">
+                    <input
+                      className="border border-gray-700 p-2 rounded w-full outline-none mb-5"
+                      type="text"
+                      placeholder="Link title eg(Facebook,Tiktok,...)"
+                      value={link.title}
+                      onChange={(e) =>
+                        handleLinkChange(index, "title", e.target.value)
+                      }
+                    />
+                    <input
+                      className="border border-gray-700 p-2 rounded w-full outline-none mb-5"
+                      type="text"
+                      placeholder="URL"
+                      value={link.url}
+                      onChange={(e) =>
+                        handleLinkChange(index, "url", e.target.value)
+                      }
+                    />
+                    {links.length > 1 && (
+                      <button
+                        className="text-gradient"
+                        title="remove link"
+                        onClick={() => removeLink(index)}
+                      >
+                        <BsTrash color="red" size="20" />
+                      </button>
+                    )}
+                  </div>
+                ))}
             </div>
             {fullName && position && links && bio ? (
               <button
@@ -205,5 +249,7 @@ const UpdateAuthor = ({ authorList, setIsUpdated }) => {
     </Layout>
   );
 };
-
+UpdateAuthor.propTypes = {
+  setIsUpdated: PropTypes.func.isRequired,
+};
 export default UpdateAuthor;

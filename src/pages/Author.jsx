@@ -4,7 +4,8 @@ import TableHead from "../components/TableHead";
 import LinkIcon from "../components/LinkIcon";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-const Author = ({ isAuth, deltePost, authorList }) => {
+import PropTypes from "prop-types";
+const Author = ({ deltePost, authorList }) => {
   const notify = (id) =>
     toast.error(
       <>
@@ -67,7 +68,10 @@ const Author = ({ isAuth, deltePost, authorList }) => {
 
               {authorList.map((post, index) => (
                 <>
-                  <tr className="bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-900 text-gray-700 dark:text-gray-400">
+                  <tr
+                    key={index}
+                    className="bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-900 text-gray-700 dark:text-gray-400"
+                  >
                     <td className="px-4 py-3">{index + 1}</td>
                     <td className="px-4 py-3">{post.fullName}</td>
                     <td className="px-4 py-3">{post.position}</td>
@@ -85,9 +89,9 @@ const Author = ({ isAuth, deltePost, authorList }) => {
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2">
                         {post.links.map((link) => (
-                          <>
+                          <span key={index}>
                             <LinkIcon url={link.link} title={link.title} />
-                          </>
+                          </span>
                         ))}
                       </div>
                     </td>
@@ -138,5 +142,8 @@ const Author = ({ isAuth, deltePost, authorList }) => {
     </Layout>
   );
 };
-
+Author.propTypes = {
+  deltePost: PropTypes.func.isRequired,
+  authorList: PropTypes.array.isRequired,
+};
 export default Author;

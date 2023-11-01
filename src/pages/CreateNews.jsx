@@ -1,21 +1,23 @@
 import { useState } from "react";
 import { addDoc, collection } from "firebase/firestore";
-import { db, auth } from "../firebase-config";
+import { db } from "../firebase-config";
 import { useNavigate } from "react-router-dom";
 import ReactMde from "react-mde";
 import Showdown from "showdown";
 import Layout from "../Layouts/Layout";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 import WidgetGroup from "../components/WidgetGroup";
-const CreateNews = ({ setIsUpdated, authorList }) => {
 
+const CreateNews = ({ setIsUpdated, authorList }) => {
+  const author = authorList.map((data) => data.fullName)[0];
+  // const authorId = authorList.map((data) => data.authorId)[0];
   const [title, setTitle] = useState("");
   const [img, setImg] = useState("");
   const [tags, setTags] = useState("");
   const [content, setContent] = useState("");
-  const [authorName, setAuthorName] = useState(authorList[0].fullName);
+  const [authorName, setAuthorName] = useState(author);
   const [selectedTab, setSelectedTab] = useState("write");
   const postCollectionRef = collection(db, "posts");
   let navigate = useNavigate();
@@ -26,6 +28,7 @@ const CreateNews = ({ setIsUpdated, authorList }) => {
   const formattedDate = currentDate.toLocaleDateString(undefined, options);
 
   const createNews = () => {
+    const authorId = authorList.filter((data) => data.fullName == authorName )[0].authorId;
     addDoc(postCollectionRef, {
       title: title,
       content: content,
@@ -33,7 +36,7 @@ const CreateNews = ({ setIsUpdated, authorList }) => {
       date: formattedDate,
       tags: tags.replace(/\s/g, ""),
       author: {
-        id: auth.currentUser.uid,
+        id: authorId,
         name: authorName,
       },
     });
@@ -111,7 +114,7 @@ const CreateNews = ({ setIsUpdated, authorList }) => {
             value={authorName}
             onChange={(e) => setAuthorName(e.target.value)}
           >
-            {authorList.map((data, index) => (
+            {authorList.map((data) => (
               <>
                 <option value={data.fullName}>{data.fullName}</option>
               </>
@@ -167,7 +170,7 @@ const CreateNews = ({ setIsUpdated, authorList }) => {
   );
 };
 CreateNews.propTypes = {
-  authorList: PropTypes.array.isRequired, 
+  authorList: PropTypes.array.isRequired,
   setIsUpdated: PropTypes.func.isRequired,
 };
 export default CreateNews;

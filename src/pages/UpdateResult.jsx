@@ -1,23 +1,50 @@
-import { useState } from "react";
-import { setDoc, doc } from "firebase/firestore";
-import { db, auth } from "../firebase-config";
+import { useEffect, useState } from "react";
+import { setDoc, doc, getDoc } from "firebase/firestore";
+import { db } from "../firebase-config";
 import { useNavigate } from "react-router-dom";
 import Layout from "../Layouts/Layout";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useParams } from "react-router-dom";
-import WidgetGroup from "../components/WidgetGroup";
-
-const UpdateResult = ({ setIsUpdated, resultList }) => {
+import Loading from "../components/Loading";
+import PropTypes from "prop-types";
+const UpdateResult = ({ setIsUpdated }) => {
   const { id: resultParam } = useParams();
-  const result = resultList.filter((post) => post.id === resultParam)[0];
 
-  const [title, setTitle] = useState(result.title);
-  const [teamA, setTeamA] = useState(result.teamA);
-  const [teamB, setTeamB] = useState(result.teamB);
-  const [teamAGoal, setTeamAGoal] = useState(result.teamAGoal);
-  const [teamBGoal, setTeamBGoal] = useState(result.teamBGoal);
+  // const result = resultList.filter((post) => post.id === resultParam)[0];
+
+  const [title, setTitle] = useState('');
+  const [teamA, setTeamA] = useState('');
+  const [teamB, setTeamB] = useState('');
+  const [teamAGoal, setTeamAGoal] = useState('');
+  const [teamBGoal, setTeamBGoal] = useState('');
   let navigate = useNavigate();
+
+  useEffect(() => {
+    const docRef = doc(db, "results", resultParam);
+
+    const fetchData = async () => {
+      try {
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+
+          setTitle(data.title);
+          setTeamA(data.teamA);
+          setTeamAGoal(data.teamAGoal);
+          setTeamB(data.teamB);
+          setTeamBGoal(data.teamBGoal);
+          console.log("data", data);
+        } else {
+          console.log("No such document!");
+        }
+      } catch (error) {
+        console.error("Error fetching document:", error);
+      }
+    };
+
+    fetchData();
+  }, [resultParam]);
 
   async function updateResult(id) {
     const docRef = doc(db, "results", id);
@@ -49,9 +76,18 @@ const UpdateResult = ({ setIsUpdated, resultList }) => {
       theme: "dark",
     });
 
+    
+  // loading
+  if (!title) {
+    return (
+      <Layout>
+        <Loading />
+      </Layout>
+    );
+  }
+
   return (
     <Layout>
-     
       <div className="text-gray-900  border-gray-900 mt-6 rounded">
         <div className="text-center p-4 font-bold text-3xl text-green-400 underline uppercase">
           Update Football Result
@@ -111,7 +147,6 @@ const UpdateResult = ({ setIsUpdated, resultList }) => {
               Update Result
             </button>
           ) : (
-          
             <div>
               <button
                 className="bg-gray-700 text-white font-bold p-2 mt-5 rounded w-full"
@@ -138,5 +173,7 @@ const UpdateResult = ({ setIsUpdated, resultList }) => {
     </Layout>
   );
 };
-
+UpdateResult.propTypes = {
+  setIsUpdated: PropTypes.func.isRequired,
+};
 export default UpdateResult;

@@ -1,13 +1,13 @@
 import { auth, provider } from "../firebase-config";
 import { signInWithPopup } from "firebase/auth";
 import { Link, useNavigate } from "react-router-dom";
-
+import PropTypes from "prop-types";
 const Login = ({ setIsAuth }) => {
   let navigate = useNavigate();
 
   const signIn = () => {
     signInWithPopup(auth, provider).then((result) => {
-      console.log("login successfully");
+      console.log("login successfully", result);
       localStorage.setItem("isAuth", true);
       setIsAuth(true);
       navigate("/");
@@ -59,6 +59,9 @@ const Login = ({ setIsAuth }) => {
       </Link>
     </div>
   );
+};
+Login.propTypes = {
+  setIsAuth: PropTypes.func.isRequired,
 };
 
 export default Login;

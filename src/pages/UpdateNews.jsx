@@ -1,22 +1,50 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { setDoc, doc } from "firebase/firestore";
-import { db, auth } from "../firebase-config";
+import { setDoc, doc, getDoc } from "firebase/firestore";
+import { db } from "../firebase-config";
 import { useNavigate } from "react-router-dom";
 import ReactMde from "react-mde";
 import Showdown from "showdown";
 import Layout from "../Layouts/Layout";
-const UpdateNews = ({ postList, setIsUpdated, authorList }) => {
+import Loading from "../components/Loading";
+import PropTypes from "prop-types";
+const UpdateNews = ({ setIsUpdated, authorList }) => {
   const { post: postParam } = useParams();
-  const post = postList.filter((post) => post.id === postParam)[0];
+  // const post = postList.filter((post) => post.id === postParam)[0];
 
-  const [title, setTitle] = useState(post.title);
-  const [img, setImg] = useState(post.img);
-  const [tags, setTags] = useState(post.tags);
-  const [content, setContent] = useState(post.content);
-  const [authorName, setAuthorName] = useState(post.author.name);
+  const [title, setTitle] = useState("");
+  const [img, setImg] = useState("");
+  const [tags, setTags] = useState("");
+  const [content, setContent] = useState("");
+  const [authorName, setAuthorName] = useState("");
   const [selectedTab, setSelectedTab] = useState("write");
   let navigate = useNavigate();
+
+  useEffect(() => {
+    const docRef = doc(db, "posts", postParam);
+
+    const fetchData = async () => {
+      try {
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+
+          setTitle(data.title);
+          setImg(data.img);
+          setTags(data.tags);
+          setContent(data.content);
+          setAuthorName(data.author.name);
+          console.log("data", data);
+        } else {
+          console.log("No such document!");
+        }
+      } catch (error) {
+        console.error("Error fetching document:", error);
+      }
+    };
+
+    fetchData();
+  }, [postParam]);
 
   //date
   const currentDate = new Date();
@@ -25,6 +53,8 @@ const UpdateNews = ({ postList, setIsUpdated, authorList }) => {
 
   async function updateNews(id) {
     const docRef = doc(db, "posts", id);
+    const authorId = authorList.filter((data) => data.fullName == authorName)[0]
+      .authorId;
     await setDoc(
       docRef,
       {
@@ -34,7 +64,7 @@ const UpdateNews = ({ postList, setIsUpdated, authorList }) => {
         date: formattedDate,
         tags: tags.replace(/\s/g, ""),
         author: {
-          id: id,
+          id: authorId,
           name: authorName,
         },
       },
@@ -55,6 +85,16 @@ const UpdateNews = ({ postList, setIsUpdated, authorList }) => {
     strikethrough: true,
     tasklists: true,
   });
+
+  // loading
+  if (!title) {
+    return (
+      <Layout>
+        <Loading />
+      </Layout>
+    );
+  }
+
   return (
     <Layout>
       <div className="text-gray-900  border-gray-900 mt-6 rounded">
@@ -103,7 +143,9 @@ const UpdateNews = ({ postList, setIsUpdated, authorList }) => {
           >
             {authorList.map((data) => (
               <>
-                <option value={data.fullName}>{data.fullName}</option>
+                <option key={data.id} value={data.fullName}>
+                  {data.fullName}
+                </option>
               </>
             ))}
           </select>
@@ -142,5 +184,8 @@ const UpdateNews = ({ postList, setIsUpdated, authorList }) => {
     </Layout>
   );
 };
-
+UpdateNews.propTypes = {
+  authorList: PropTypes.array.isRequired,
+  setIsUpdated: PropTypes.func.isRequired,
+};
 export default UpdateNews;

@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { addDoc, collection } from "firebase/firestore";
-import { db, auth } from "../firebase-config";
+import { db } from "../firebase-config";
 import { useNavigate } from "react-router-dom";
 import Layout from "../Layouts/Layout";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import WidgetGroup from "../components/WidgetGroup";
+import PropTypes from "prop-types";
 const CreateResult = ({ setIsUpdated }) => {
   const [title, setTitle] = useState("");
   const [teamA, setTeamA] = useState("");
@@ -136,5 +137,7 @@ const CreateResult = ({ setIsUpdated }) => {
     </Layout>
   );
 };
-
+CreateResult.propTypes = {
+  setIsUpdated: PropTypes.func.isRequired,
+};
 export default CreateResult;

@@ -3,8 +3,8 @@ import { useState, useEffect } from "react";
 
 import Detail from "./pages/Detail";
 import Login from "./pages/Login";
-import { signOut } from "firebase/auth";
-import { auth } from "./firebase-config";
+// import { signOut } from "firebase/auth";
+// import { auth } from "./firebase-config";
 import LoginWithPhone from "./pages/LoginWithPhone";
 import { db } from "./firebase-config";
 import { getDocs, collection, deleteDoc, doc } from "firebase/firestore";
@@ -24,7 +24,6 @@ import UpdateAuthor from "./pages/UpdateAuthor";
 import UpdateResult from "./pages/UpdateResult";
 import UpdateTodayMatch from "./pages/UpdateTodayMatch";
 
-
 export default function App() {
   const [isAuth, setIsAuth] = useState(localStorage.getItem("isAuth"));
   const [isUpdated, setIsUpdated] = useState(false);
@@ -32,21 +31,21 @@ export default function App() {
   const [authorList, setAuthorList] = useState([]);
   const [todayMatchList, setTodayMatchList] = useState([]);
   const [resultList, setResultList] = useState([]);
-  const postCollectionRef = collection(db, "posts");
-  const authorCollectionRef = collection(db, "authors");
-  const resultCollectionRef = collection(db, "results");
-  const todayMatchCollectionRef = collection(db, "todayMatch");
 
-  const signUserOut = () => {
-    signOut(auth).then(() => {
-      localStorage.clear();
-      console.log("Signed Out");
-      setIsAuth(false);
-      // window.location.href = "/login";
-    });
-  };
+  // const signUserOut = () => {
+  //   signOut(auth).then(() => {
+  //     localStorage.clear();
+  //     console.log("Signed Out");
+  //     setIsAuth(false);
+  //     // window.location.href = "/login";
+  //   });
+  // };
 
   useEffect(() => {
+    const postCollectionRef = collection(db, "posts");
+    const authorCollectionRef = collection(db, "authors");
+    const resultCollectionRef = collection(db, "results");
+    const todayMatchCollectionRef = collection(db, "todayMatch");
     const getPosts = async () => {
       const authors = await getDocs(authorCollectionRef);
       const posts = await getDocs(postCollectionRef);
@@ -64,7 +63,6 @@ export default function App() {
       );
     };
     getPosts();
-    console.log("postList", postList);
   }, [isUpdated]);
 
   const deltePost = async (id, database = "posts") => {
@@ -77,108 +75,89 @@ export default function App() {
   };
 
   return (
-      <Router>
-        <Routes>
-          <Route path="/login" element={<Login setIsAuth={setIsAuth} />} />
-          <Route path="/loginWithPhone" element={<LoginWithPhone />} />
-          <Route path="/detail/:id" element={<Detail postList={postList} />} />
+    <Router>
+      <Routes>
+        <Route path="/login" element={<Login setIsAuth={setIsAuth} />} />
+        <Route path="/loginWithPhone" element={<LoginWithPhone />} />
+        <Route path="/detail/:id" element={<Detail postList={postList} />} />
 
-          <Route path="/" element={<Dashboard />} />
-          <Route
-            path="/news"
-            element={
-              <News isAuth={isAuth} deltePost={deltePost} postList={postList} />
-            }
-          />
-          <Route path="/news_detail/:id" element={<NewsDetail />} />
-          <Route
-            path="/create_news"
-            element={
-              <CreateNews setIsUpdated={setIsUpdated} authorList={authorList} />
-            }
-          />
-          <Route
-            path="/update_news/:post"
-            element={
-              <UpdateNews
-                postList={postList}
-                setIsUpdated={setIsUpdated}
-                authorList={authorList}
-              />
-            }
-          />
+        <Route path="/" element={<Dashboard />} />
+        <Route
+          path="/news"
+          element={
+            <News isAuth={isAuth} deltePost={deltePost} postList={postList} />
+          }
+        />
+        <Route path="/news_detail/:id" element={<NewsDetail />} />
+        <Route
+          path="/create_news"
+          element={
+            <CreateNews setIsUpdated={setIsUpdated} authorList={authorList} />
+          }
+        />
+        <Route
+          path="/update_news/:post"
+          element={
+            <UpdateNews setIsUpdated={setIsUpdated} authorList={authorList} />
+          }
+        />
 
-          <Route
-            path="/authors"
-            element={
-              <Author
-                isAuth={isAuth}
-                deltePost={deltePost}
-                authorList={authorList}
-              />
-            }
-          />
-          <Route
-            path="/create_authors"
-            element={<CreateAuthor setIsUpdated={setIsUpdated} />}
-          />
-          <Route
-            path="/update_author/:id"
-            element={
-              <UpdateAuthor
-                authorList={authorList}
-                setIsUpdated={setIsUpdated}
-              />
-            }
-          />
+        <Route
+          path="/authors"
+          element={
+            <Author
+              isAuth={isAuth}
+              deltePost={deltePost}
+              authorList={authorList}
+            />
+          }
+        />
+        <Route
+          path="/create_authors"
+          element={<CreateAuthor setIsUpdated={setIsUpdated} />}
+        />
+        <Route
+          path="/update_author/:id"
+          element={<UpdateAuthor setIsUpdated={setIsUpdated} />}
+        />
 
-          <Route
-            path="/result"
-            element={
-              <Result
-                isAuth={isAuth}
-                deltePost={deltePost}
-                resultList={resultList}
-              />
-            }
-          />
-          <Route
-            path="/create_result"
-            element={<CreateResult setIsUpdated={setIsUpdated} />}
-          />
-          <Route
-            path="/update_result/:id"
-            element={
-              <UpdateResult
-                setIsUpdated={setIsUpdated}
-                resultList={resultList}
-              />
-            }
-          />
-          <Route
-            path="/today_match"
-            element={
-              <TodayMatch
-                isAuth={isAuth}
-                deltePost={deltePost}
-                todayMatchList={todayMatchList}
-              />
-            }
-          />
-          <Route
-            path="/create_today_match"
-            element={<CreateTodayMatch setIsUpdated={setIsUpdated} />}
-          />
-          <Route
-            path="/update_match/:id"
-            element={
-              <UpdateTodayMatch
-                setIsUpdated={setIsUpdated}
-                todayMatchList={todayMatchList}
-              />
-            }
-          />
-        </Routes>
-      </Router>
+        <Route
+          path="/result"
+          element={
+            <Result
+              isAuth={isAuth}
+              deltePost={deltePost}
+              resultList={resultList}
+            />
+          }
+        />
+        <Route
+          path="/create_result"
+          element={<CreateResult setIsUpdated={setIsUpdated} />}
+        />
+        <Route
+          path="/update_result/:id"
+          element={<UpdateResult setIsUpdated={setIsUpdated} />}
+        />
+        <Route
+          path="/today_match"
+          element={
+            <TodayMatch
+              isAuth={isAuth}
+              deltePost={deltePost}
+              todayMatchList={todayMatchList}
+            />
+          }
+        />
+        <Route
+          path="/create_today_match"
+          element={<CreateTodayMatch setIsUpdated={setIsUpdated} />}
+        />
+        <Route
+          path="/update_match/:id"
+          element={<UpdateTodayMatch setIsUpdated={setIsUpdated} />}
+        />
+      </Routes>
+    </Router>
   );
 }

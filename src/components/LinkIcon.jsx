@@ -17,7 +17,7 @@ import {
 import { SiGoogle } from "react-icons/si";
 import { MdMailOutline } from "react-icons/md";
 import { RiCloseCircleLine } from "react-icons/ri";
-
+import PropTypes from "prop-types";
 
 const IconSelector = ({ title }) => {
   let lowerCaseTitle = title;
@@ -47,6 +47,9 @@ const IconSelector = ({ title }) => {
 
   return <IconComponent size={20} />;
 };
+IconSelector.propTypes = {
+  title: PropTypes.str.isRequired,
+};
 
 const LinkIcon = ({ title }) => {
   return (
@@ -55,5 +58,8 @@ const LinkIcon = ({ title }) => {
     </>
   );
 };
+LinkIcon.propTypes = {
+  title: PropTypes.string.isRequired,
+};  
 
 export default LinkIcon;

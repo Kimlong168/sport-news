@@ -3,7 +3,8 @@ import Layout from "../Layouts/Layout";
 import TableHead from "../components/TableHead";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-const TodayMatch = ({ isAuth, deltePost, todayMatchList }) => {
+import PropTypes from "prop-types";
+const TodayMatch = ({ deltePost, todayMatchList }) => {
   const notify = (id) =>
     toast.error(
       <>
@@ -116,5 +117,8 @@ const TodayMatch = ({ isAuth, deltePost, todayMatchList }) => {
     </Layout>
   );
 };
-
+TodayMatch.propTypes = {
+  deltePost: PropTypes.func.isRequired,
+  todayMatchList: PropTypes.array.isRequired,
+};
 export default TodayMatch;

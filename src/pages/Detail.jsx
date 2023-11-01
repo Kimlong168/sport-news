@@ -1,5 +1,6 @@
 import Markdown from "markdown-to-jsx";
 import { useParams } from "react-router-dom";
+import PropTypes from "prop-types";
 const Detail = ({ postList }) => {
   const { id } = useParams();
   return (
@@ -24,4 +25,7 @@ const Detail = ({ postList }) => {
   );
 };
 
+Detail.propTypes = {
+  postList: PropTypes.array.isRequired,
+};
 export default Detail;

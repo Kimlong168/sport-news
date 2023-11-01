@@ -1,24 +1,50 @@
 import { useState } from "react";
-import { setDoc, doc } from "firebase/firestore";
-import { db, auth } from "../firebase-config";
+import { setDoc, doc, getDoc } from "firebase/firestore";
+import { db } from "../firebase-config";
 import { useNavigate } from "react-router-dom";
 import Layout from "../Layouts/Layout";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useParams } from "react-router-dom";
-
-const UpdateTodayMatch = ({ setIsUpdated, todayMatchList }) => {
-
+import { useEffect } from "react";
+import PropTypes from "prop-types";
+import Loading from "../components/Loading";
+const UpdateTodayMatch = ({ setIsUpdated }) => {
   const { id: matchParam } = useParams();
-  const todayMatch = todayMatchList.filter((post) => post.id === matchParam)[0];
 
-  const [time, setTime] = useState(todayMatch.time);
-  const [date, setDate] = useState(convertDateFormat(todayMatch.date));
-  const [staduim, setStaduim] = useState(todayMatch.staduim);
-  const [liveOn, setLiveOn] = useState(todayMatch.liveOn);
-  const [teamA, setTeamA] = useState(todayMatch.teamA);
-  const [teamB, setTeamB] = useState(todayMatch.teamB);
+  const [time, setTime] = useState("");
+  const [date, setDate] = useState("");
+  const [staduim, setStaduim] = useState("");
+  const [liveOn, setLiveOn] = useState("");
+  const [teamA, setTeamA] = useState("");
+  const [teamB, setTeamB] = useState("");
   let navigate = useNavigate();
+
+  useEffect(() => {
+    const docRef = doc(db, "todayMatch", matchParam);
+
+    const fetchData = async () => {
+      try {
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          setTime(data.time);
+          setDate(convertDateFormat(data.date));
+          setStaduim(data.staduim);
+          setLiveOn(data.liveOn);
+          setTeamA(data.teamA);
+          setTeamB(data.teamB);
+          console.log("data", data);
+        } else {
+          console.log("No such document!");
+        }
+      } catch (error) {
+        console.error("Error fetching document:", error);
+      }
+    };
+
+    fetchData();
+  }, [matchParam]);
 
   async function updateTodayMatch(id) {
     const docRef = doc(db, "todayMatch", id);
@@ -90,6 +116,15 @@ const UpdateTodayMatch = ({ setIsUpdated, todayMatchList }) => {
       progress: undefined,
       theme: "dark",
     });
+
+  // loading
+  if (!time) {
+    return (
+      <Layout>
+        <Loading />
+      </Layout>
+    );
+  }
 
   return (
     <Layout>
@@ -193,5 +228,7 @@ const UpdateTodayMatch = ({ setIsUpdated, todayMatchList }) => {
     </Layout>
   );
 };
-
+UpdateTodayMatch.propTypes = {
+  setIsUpdated: PropTypes.func.isRequired,
+};
 export default UpdateTodayMatch;

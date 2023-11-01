@@ -1,11 +1,10 @@
-import { auth } from "../firebase-config";
-import Markdown from "markdown-to-jsx";
 import { Link } from "react-router-dom";
 import Layout from "../Layouts/Layout";
 import TableHead from "../components/TableHead";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-const News = ({ isAuth, deltePost, postList }) => {
+import PropTypes from "prop-types";
+const News = ({ deltePost, postList }) => {
   const notify = (id) =>
     toast.error(
       <>
@@ -45,6 +44,7 @@ const News = ({ isAuth, deltePost, postList }) => {
             <thead>
               <tr className="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
                 <th className="px-4 py-3">No</th>
+                <th className="px-4 py-3">Author ID</th>
                 <th className="px-4 py-3">Title</th>
                 <th className="px-4 py-3">Tags</th>
                 <th className="px-4 py-3">Author</th>
@@ -69,8 +69,11 @@ const News = ({ isAuth, deltePost, postList }) => {
                 <>
                   <tr className="bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-900 text-gray-700 dark:text-gray-400">
                     <td className="px-4 py-3">{index + 1}</td>
+                    <td className="px-4 py-3">{post.author.id}</td>
                     <td className="px-4 py-3">{post.title}</td>
-                    <td className="px-4 py-3">{post.tags ? post.tags : "No tags"}</td>
+                    <td className="px-4 py-3">
+                      {post.tags ? post.tags : "No tags"}
+                    </td>
                     <td className="px-4 py-3">{post.author.name}</td>
                     <td className="px-4 py-3">{post.date}</td>
                     <td className="px-4 py-3 text-sm text-center cursor-pointer">
@@ -120,5 +123,8 @@ const News = ({ isAuth, deltePost, postList }) => {
     </Layout>
   );
 };
-
+News.propTypes = {
+  deltePost: PropTypes.func.isRequired,
+  postList: PropTypes.array.isRequired,
+};
 export default News;
