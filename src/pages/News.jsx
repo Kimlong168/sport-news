@@ -4,7 +4,7 @@ import TableHead from "../components/TableHead";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import PropTypes from "prop-types";
-const News = ({ deltePost, postList }) => {
+const News = ({ deltePost, postList, authorList }) => {
   const notify = (id) =>
     toast.error(
       <>
@@ -44,11 +44,12 @@ const News = ({ deltePost, postList }) => {
             <thead>
               <tr className="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
                 <th className="px-4 py-3">No</th>
-                <th className="px-4 py-3">Author ID</th>
                 <th className="px-4 py-3">Title</th>
                 <th className="px-4 py-3">Tags</th>
                 <th className="px-4 py-3">Author</th>
+                {/* <th className="px-4 py-3">Author ID</th> */}
                 <th className="px-4 py-3">Date</th>
+                <th className="px-4 py-3">Image</th>
                 <th className="px-4 py-3">View</th>
                 <th className="px-4 py-3">Edit</th>
                 <th className="px-4 py-3">Delete</th>
@@ -58,7 +59,7 @@ const News = ({ deltePost, postList }) => {
               {postList.length == 0 && (
                 <>
                   <tr className=" text-center">
-                    <td className="py-8 " colSpan={8}>
+                    <td className="py-8 " colSpan={9}>
                       No Data
                     </td>
                   </tr>
@@ -67,17 +68,38 @@ const News = ({ deltePost, postList }) => {
 
               {postList.map((post, index) => (
                 <>
-                  <tr className="bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-900 text-gray-700 dark:text-gray-400">
+                  <tr
+                    key={post.id}
+                    className="bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-900 text-gray-700 dark:text-gray-400"
+                  >
                     <td className="px-4 py-3">{index + 1}</td>
-                    <td className="px-4 py-3">{post.author.id}</td>
                     <td className="px-4 py-3">{post.title}</td>
                     <td className="px-4 py-3">
                       {post.tags ? post.tags : "No tags"}
                     </td>
-                    <td className="px-4 py-3">{post.author.name}</td>
+                    {/* <td className="px-4 py-3">{post.author.name}</td> */}
+                    <td className="px-4 py-3">
+                      {authorList &&
+                        authorList.map((data) => {
+                          if (data.authorId == post.author.id) {
+                            return data.fullName;
+                          }
+                        })}
+                    </td>
+                    {/* <td className="px-4 py-3">{post.author.id}</td> */}
                     <td className="px-4 py-3">{post.date}</td>
+                    <td className="px-4 py-3">
+                      {post.img ? (
+                        <img
+                          className="min-w-[70px] h-[50px] rounded-sm"
+                          src={post.img}
+                        />
+                      ) : (
+                        "No Image"
+                      )}
+                    </td>
                     <td className="px-4 py-3 text-sm text-center cursor-pointer">
-                      <Link to={`/detail/${post.id}`}>
+                      <Link to={`/news_detail/${post.id}`}>
                         <div className="px-2 py-1.5 rounded bg-yellow-500 text-white cursor-pointer">
                           View
                         </div>
@@ -126,5 +148,6 @@ const News = ({ deltePost, postList }) => {
 News.propTypes = {
   deltePost: PropTypes.func.isRequired,
   postList: PropTypes.array.isRequired,
+  authorList: PropTypes.array.isRequired,
 };
 export default News;

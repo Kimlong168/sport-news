@@ -48,7 +48,7 @@ const IconSelector = ({ title }) => {
   return <IconComponent size={20} />;
 };
 IconSelector.propTypes = {
-  title: PropTypes.str.isRequired,
+  title: PropTypes.string.isRequired,
 };
 
 const LinkIcon = ({ title }) => {

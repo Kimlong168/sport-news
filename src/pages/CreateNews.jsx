@@ -16,6 +16,7 @@ const CreateNews = ({ setIsUpdated, authorList }) => {
   const [title, setTitle] = useState("");
   const [img, setImg] = useState("");
   const [tags, setTags] = useState("");
+  const [description, setDescription] = useState("");
   const [content, setContent] = useState("");
   const [authorName, setAuthorName] = useState(author);
   const [selectedTab, setSelectedTab] = useState("write");
@@ -28,9 +29,11 @@ const CreateNews = ({ setIsUpdated, authorList }) => {
   const formattedDate = currentDate.toLocaleDateString(undefined, options);
 
   const createNews = () => {
-    const authorId = authorList.filter((data) => data.fullName == authorName )[0].authorId;
+    const authorId = authorList.filter((data) => data.fullName == authorName)[0]
+      .authorId;
     addDoc(postCollectionRef, {
       title: title,
+      description: description,
       content: content,
       img: img,
       date: formattedDate,
@@ -83,6 +86,14 @@ const CreateNews = ({ setIsUpdated, authorList }) => {
             className="border border-gray-700 p-2 rounded w-full outline-none mb-5"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
+          />
+          <label className="font-bold mb-2 text-xl">Description</label>
+          <input
+            type="text"
+            placeholder="Description"
+            className="border border-gray-700 p-2 rounded w-full outline-none mb-5"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
           />
           <label className="font-bold mb-2 text-xl">Cover Image</label>
           <input

@@ -5,15 +5,20 @@ import LinkIcon from "../components/LinkIcon";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import PropTypes from "prop-types";
+import { storage } from "../firebase-config";
+import { deleteObject, ref } from "firebase/storage";
 const Author = ({ deltePost, authorList }) => {
-  const notify = (id) =>
+  const notify = (id, authorId) =>
     toast.error(
       <>
         <div className="flex items-center gap-3">
           <small className="text-xs uppercase">Are you sure to delete?</small>
           <button
             className="border text-xs text-white bg-red-600 px-1.5 py-1 rounded"
-            onClick={() => deltePost(id, "authors")}
+            onClick={() => {
+              deltePost(id, "authors");
+              deleteImageFromStorage(authorId);
+            }}
           >
             Delete
           </button>
@@ -30,6 +35,20 @@ const Author = ({ deltePost, authorList }) => {
         theme: "dark",
       }
     );
+
+  const deleteImageFromStorage = (id) => {
+    // Create a reference to the image you want to delete
+    const imageRef = ref(storage, `authorImages/${id}`);
+
+    // Delete the old image
+    deleteObject(imageRef)
+      .then(() => {
+        console.log("Image deleted successfully");
+      })
+      .catch((error) => {
+        console.error("Error deleting image:", error);
+      });
+  };
   return (
     <Layout>
       <TableHead
@@ -50,7 +69,6 @@ const Author = ({ deltePost, authorList }) => {
                 <th className="px-4 py-3">Bio</th>
                 <th className="px-4 py-3">Profile Image</th>
                 <th className="px-4 py-3">Links</th>
-                <th className="px-4 py-3">View</th>
                 <th className="px-4 py-3">Edit</th>
                 <th className="px-4 py-3">Delete</th>
               </tr>
@@ -59,7 +77,7 @@ const Author = ({ deltePost, authorList }) => {
               {authorList.length == 0 && (
                 <>
                   <tr className=" text-center">
-                    <td className="py-8 " colSpan={9}>
+                    <td className="py-8 " colSpan={8}>
                       No Data
                     </td>
                   </tr>
@@ -76,9 +94,9 @@ const Author = ({ deltePost, authorList }) => {
                     <td className="px-4 py-3">{post.fullName}</td>
                     <td className="px-4 py-3">{post.position}</td>
                     <td className="px-4 py-3">
-                      <div className="line-clamp-1 max-w-[100px]">
+                      <div className="line-clamp-1 break-all  hover:line-clamp-none max-w-[300px] cursor-pointer transition-all transition-delay-300">
                         {post.bio}
-                      </div>{" "}
+                      </div>
                     </td>
                     <td className="px-4 py-3">
                       <img
@@ -95,13 +113,6 @@ const Author = ({ deltePost, authorList }) => {
                         ))}
                       </div>
                     </td>
-                    <td className="px-4 py-3 text-sm text-center cursor-pointer">
-                      <Link to={`/detail/${post.id}`}>
-                        <div className="px-2 py-1.5 rounded bg-yellow-500 text-white cursor-pointer">
-                          View
-                        </div>
-                      </Link>
-                    </td>
 
                     <td className="px-4 py-3 text-sm text-center">
                       <Link to={`/update_author/${post.id}`}>
@@ -113,7 +124,7 @@ const Author = ({ deltePost, authorList }) => {
 
                     <td className="px-4 py-3 text-sm text-center cursor-pointer">
                       <div
-                        onClick={() => notify(post.id)}
+                        onClick={() => notify(post.id, post.authorId)}
                         className="px-2 py-1.5 rounded bg-red-600 text-white"
                       >
                         Delete

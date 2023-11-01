@@ -1,9 +1,72 @@
-
-import Layout from "../Layouts/Layout"
+import { useEffect, useState } from "react";
+import Layout from "../Layouts/Layout";
+import { useParams } from "react-router-dom";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../firebase-config";
+import Loading from "../components/Loading";
+import Markdown from "react-markdown";
 const NewsDetail = () => {
-  return (
-    <Layout>NewsDetail</Layout>
-  )
-}
+  const { id: newsParams } = useParams();
 
-export default NewsDetail
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    const docRef = doc(db, "posts", newsParams);
+
+    const fetchData = async () => {
+      try {
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+
+          setData(data);
+   
+          console.log("data", data);
+        } else {
+          console.log("No such document!");
+        }
+      } catch (error) {
+        console.error("Error fetching document:", error);
+      }
+    };
+
+    fetchData();
+  }, [newsParams]);
+
+  // loading
+  if (!data) {
+    return (
+      <>
+        <Layout>
+          <Loading />
+        </Layout>
+      </>
+    );
+  }
+
+  return (
+    <Layout>
+      <div className="text-gray-900 ">
+        <div className="text-3xl text-center text-gray-800 font-bold mb-5 uppercase">
+          {data.title}
+        </div>
+        <div className="mb-4">
+          {data.img && <img className="mx-auto block" src={data.img} />}
+        </div>
+
+        <div className="text-center font-bold text-xl uppercase">
+          {data.author.name}
+        </div>
+        <div className="text-lg text-center font-semibold text-blue-600">
+          {data.date}
+        </div>
+        <div className="text-center mb-5 uppercase bg-red-500 px-2 py-1 text-white font-semibold mt-2 rounded">
+          {data.tags}
+        </div>
+        <Markdown>{data.content}</Markdown>
+      </div>
+    </Layout>
+  );
+};
+
+export default NewsDetail;

@@ -85,7 +85,12 @@ export default function App() {
         <Route
           path="/news"
           element={
-            <News isAuth={isAuth} deltePost={deltePost} postList={postList} />
+            <News
+              isAuth={isAuth}
+              deltePost={deltePost}
+              postList={postList}
+              authorList={authorList}
+            />
           }
         />
         <Route path="/news_detail/:id" element={<NewsDetail />} />

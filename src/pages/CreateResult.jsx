@@ -116,7 +116,7 @@ const CreateResult = ({ setIsUpdated }) => {
                 className="bg-gray-700 text-white font-bold p-2 mt-5 rounded w-full"
                 onClick={notify}
               >
-                Create News
+                Create Result
               </button>
               <ToastContainer
                 position="top-right"
