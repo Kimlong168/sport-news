@@ -1,5 +1,5 @@
 import Widget from "../components/Widget";
-import { BiNews, BiFootball } from "react-icons/bi";
+import { BiNews, BiFootball, BiCategoryAlt } from "react-icons/bi";
 import { FiUsers } from "react-icons/fi";
 import { PiBellRingingBold } from "react-icons/pi";
 import { Link } from "react-router-dom";
@@ -23,6 +23,9 @@ const WidgetGroup = () => {
           color="bg-purple-600"
           icon={<PiBellRingingBold />}
         />
+      </Link>
+      <Link to="/create_category">
+        <Widget title="Category" color="bg-yellow-400" icon={<BiCategoryAlt />} />
       </Link>
     </div>
   );

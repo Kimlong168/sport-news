@@ -8,9 +8,8 @@ import Showdown from "showdown";
 import Layout from "../Layouts/Layout";
 import Loading from "../components/Loading";
 import PropTypes from "prop-types";
-const UpdateNews = ({ setIsUpdated, authorList }) => {
+const UpdateNews = ({ setIsUpdated, authorList, categoryList }) => {
   const { post: postParam } = useParams();
-  // const post = postList.filter((post) => post.id === postParam)[0];
 
   const [title, setTitle] = useState("");
   const [img, setImg] = useState("");
@@ -18,6 +17,7 @@ const UpdateNews = ({ setIsUpdated, authorList }) => {
   const [description, setDescription] = useState("");
   const [content, setContent] = useState("");
   const [authorName, setAuthorName] = useState("");
+  const [categoryId, setCategoryId] = useState('');
   const [selectedTab, setSelectedTab] = useState("write");
   let navigate = useNavigate();
 
@@ -35,6 +35,7 @@ const UpdateNews = ({ setIsUpdated, authorList }) => {
           setImg(data.img);
           setTags(data.tags);
           setContent(data.content);
+          setCategoryId(data.categoryId);
           setAuthorName(data.author.name);
           console.log("data", data);
         } else {
@@ -65,6 +66,7 @@ const UpdateNews = ({ setIsUpdated, authorList }) => {
         content: content,
         img: img,
         date: formattedDate,
+        categoryId: categoryId,
         tags: tags.replace(/\s/g, ""),
         author: {
           id: authorId,
@@ -138,14 +140,22 @@ const UpdateNews = ({ setIsUpdated, authorList }) => {
             value={tags}
             onChange={(e) => setTags(e.target.value)}
           />
-          {/* <label className="font-bold mb-2 text-xl">Author name</label>
-          <input
-            type="text"
-            placeholder="author name (optional))"
+
+          <label className="font-bold mb-2 text-xl">Category</label>
+          <select
             className="border border-gray-700 p-2 rounded w-full outline-none mb-5"
-            value={authorName}
-            onChange={(e) => setAuthorName(e.target.value)}
-          /> */}
+            value={categoryId}
+            onChange={(e) => setCategoryId(e.target.value)}
+          >
+            {categoryList.map((data) => (
+              <>
+                <option key={data.id} value={data.id}>
+                  {data.categoryName}
+                </option>
+              </>
+            ))}
+          </select>
+
           <label className="font-bold mb-2 text-xl">Author name</label>
           <select
             className="border border-gray-700 p-2 rounded w-full outline-none mb-5"
@@ -197,6 +207,7 @@ const UpdateNews = ({ setIsUpdated, authorList }) => {
 };
 UpdateNews.propTypes = {
   authorList: PropTypes.array.isRequired,
+  categoryList: PropTypes.array.isRequired,
   setIsUpdated: PropTypes.func.isRequired,
 };
 export default UpdateNews;

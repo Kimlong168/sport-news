@@ -4,9 +4,9 @@ import PropTypes from "prop-types";
 const TableHead = ({ color, title, border, link }) => {
   return (
     <div
-      className={`w-full pb-1 border-b-2 ${border} flex items-center justify-between gap-3 mb-3`}
+      className={`w-full pb-1 border-b-2 ${border} flex items-center justify-between gap-3 mb-3 `}
     >
-      <small className="text-3xl uppercase font-semibold">{title}</small>
+      <small className="text-3xl uppercase font-bold">{title}</small>
 
       <div>
         <Link to={link}>

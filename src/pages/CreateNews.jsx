@@ -9,16 +9,18 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import PropTypes from "prop-types";
 import WidgetGroup from "../components/WidgetGroup";
+import Loading from "../components/Loading";
 
-const CreateNews = ({ setIsUpdated, authorList }) => {
+const CreateNews = ({ setIsUpdated, authorList, categoryList }) => {
   const author = authorList.map((data) => data.fullName)[0];
-  // const authorId = authorList.map((data) => data.authorId)[0];
+  const category = categoryList.map((data) => data.id)[0];
   const [title, setTitle] = useState("");
   const [img, setImg] = useState("");
   const [tags, setTags] = useState("");
   const [description, setDescription] = useState("");
   const [content, setContent] = useState("");
   const [authorName, setAuthorName] = useState(author);
+  const [categoryId, setCategoryId] = useState(category);
   const [selectedTab, setSelectedTab] = useState("write");
   const postCollectionRef = collection(db, "posts");
   let navigate = useNavigate();
@@ -38,6 +40,7 @@ const CreateNews = ({ setIsUpdated, authorList }) => {
       img: img,
       date: formattedDate,
       tags: tags.replace(/\s/g, ""),
+      categoryId: categoryId,
       author: {
         id: authorId,
         name: authorName,
@@ -70,6 +73,14 @@ const CreateNews = ({ setIsUpdated, authorList }) => {
       progress: undefined,
       theme: "dark",
     });
+
+  if (!authorList || !categoryList) {
+    return (
+      <>
+        <Loading />
+      </>
+    );
+  }
   return (
     <Layout>
       <WidgetGroup />
@@ -103,6 +114,7 @@ const CreateNews = ({ setIsUpdated, authorList }) => {
             value={img}
             onChange={(e) => setImg(e.target.value)}
           />
+
           <label className="font-bold mb-2 text-xl">Tag</label>
           <input
             type="text"
@@ -111,17 +123,23 @@ const CreateNews = ({ setIsUpdated, authorList }) => {
             value={tags}
             onChange={(e) => setTags(e.target.value)}
           />
-          {/* <label className="font-bold mb-2 text-xl">Author name</label>
-          <input
-            type="text"
-            placeholder="author name (optional))"
-            className="border border-gray-700 p-2 rounded w-full outline-none mb-5"
-            value={authorName}
-            onChange={(e) => setAuthorName(e.target.value)}
-          /> */}
+
+          <label className="font-bold mb-2 text-xl">Category</label>
+          <select
+            className="border border-gray-700 p-2 rounded w-full outline-none mb-5 cursor-pointer"
+            value={categoryId}
+            onChange={(e) => setCategoryId(e.target.value)}
+          >
+            {categoryList.map((data) => (
+              <>
+                <option value={data.id}>{data.categoryName}</option>
+              </>
+            ))}
+          </select>
+
           <label className="font-bold mb-2 text-xl">Author name</label>
           <select
-            className="border border-gray-700 p-2 rounded w-full outline-none mb-5"
+            className="border border-gray-700 p-2 rounded w-full outline-none mb-5 cursor-pointer"
             value={authorName}
             onChange={(e) => setAuthorName(e.target.value)}
           >
@@ -146,7 +164,7 @@ const CreateNews = ({ setIsUpdated, authorList }) => {
               heightUnits="vh"
             />
           </div>
-          {title && content ? (
+          {title && content && description && categoryId && img ? (
             <button
               className="bg-gray-700 text-white font-bold p-2 mt-2 rounded w-full"
               onClick={createNews}
@@ -182,6 +200,7 @@ const CreateNews = ({ setIsUpdated, authorList }) => {
 };
 CreateNews.propTypes = {
   authorList: PropTypes.array.isRequired,
+  categoryList: PropTypes.array.isRequired,
   setIsUpdated: PropTypes.func.isRequired,
 };
 export default CreateNews;

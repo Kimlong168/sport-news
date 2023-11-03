@@ -4,7 +4,7 @@ import TableHead from "../components/TableHead";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import PropTypes from "prop-types";
-const News = ({ deltePost, postList, authorList }) => {
+const News = ({ deltePost, postList, authorList, categoryList }) => {
   const notify = (id) =>
     toast.error(
       <>
@@ -47,7 +47,7 @@ const News = ({ deltePost, postList, authorList }) => {
                 <th className="px-4 py-3">Title</th>
                 <th className="px-4 py-3">Tags</th>
                 <th className="px-4 py-3">Author</th>
-                {/* <th className="px-4 py-3">Author ID</th> */}
+                <th className="px-4 py-3">Category</th>
                 <th className="px-4 py-3">Date</th>
                 <th className="px-4 py-3">Image</th>
                 <th className="px-4 py-3">View</th>
@@ -77,7 +77,6 @@ const News = ({ deltePost, postList, authorList }) => {
                     <td className="px-4 py-3">
                       {post.tags ? post.tags : "No tags"}
                     </td>
-                    {/* <td className="px-4 py-3">{post.author.name}</td> */}
                     <td className="px-4 py-3">
                       {authorList &&
                         authorList.map((data) => {
@@ -86,7 +85,14 @@ const News = ({ deltePost, postList, authorList }) => {
                           }
                         })}
                     </td>
-                    {/* <td className="px-4 py-3">{post.author.id}</td> */}
+                    <td className="px-4 py-3">
+                      {categoryList &&
+                        categoryList.map((data) => {
+                          if (data.id == post.categoryId) {
+                            return data.categoryName;
+                          }
+                        })}
+                    </td>
                     <td className="px-4 py-3">{post.date}</td>
                     <td className="px-4 py-3">
                       {post.img ? (
@@ -149,5 +155,6 @@ News.propTypes = {
   deltePost: PropTypes.func.isRequired,
   postList: PropTypes.array.isRequired,
   authorList: PropTypes.array.isRequired,
+  categoryList: PropTypes.array.isRequired,
 };
 export default News;

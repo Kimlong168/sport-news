@@ -1,7 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useState, useEffect } from "react";
 
-import Detail from "./pages/Detail";
 import Login from "./pages/Login";
 // import { signOut } from "firebase/auth";
 // import { auth } from "./firebase-config";
@@ -15,15 +14,17 @@ import NewsDetail from "./pages/NewsDetail";
 import Author from "./pages/Author";
 import Result from "./pages/Result";
 import TodayMatch from "./pages/TodayMatch";
+import Category from "./pages/Category";
 import CreateNews from "./pages/CreateNews";
 import CreateAuthor from "./pages/CreateAuthor";
 import CreateResult from "./pages/CreateResult";
 import CreateTodayMatch from "./pages/CreateTodayMatch";
+import CreateCategory from "./pages/CreateCategory";
 import UpdateNews from "./pages/UpdateNews";
 import UpdateAuthor from "./pages/UpdateAuthor";
 import UpdateResult from "./pages/UpdateResult";
 import UpdateTodayMatch from "./pages/UpdateTodayMatch";
-
+import UpdateCategory from "./pages/UpdateCategory";
 export default function App() {
   const [isAuth, setIsAuth] = useState(localStorage.getItem("isAuth"));
   const [isUpdated, setIsUpdated] = useState(false);
@@ -31,6 +32,7 @@ export default function App() {
   const [authorList, setAuthorList] = useState([]);
   const [todayMatchList, setTodayMatchList] = useState([]);
   const [resultList, setResultList] = useState([]);
+  const [categoryList, setCategoryList] = useState([]);
 
   // const signUserOut = () => {
   //   signOut(auth).then(() => {
@@ -46,20 +48,26 @@ export default function App() {
     const authorCollectionRef = collection(db, "authors");
     const resultCollectionRef = collection(db, "results");
     const todayMatchCollectionRef = collection(db, "todayMatch");
+    const categoryCollectionRef = collection(db, "categories");
     const getPosts = async () => {
       const authors = await getDocs(authorCollectionRef);
       const posts = await getDocs(postCollectionRef);
       const results = await getDocs(resultCollectionRef);
       const matches = await getDocs(todayMatchCollectionRef);
+      const categories = await getDocs(categoryCollectionRef);
       console.log("posts", posts);
       console.log("auhtors", authors);
       console.log("football_results", results);
       console.log("today_match", matches);
+      console.log("categories", categories);
       setPostList(posts.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
       setAuthorList(authors.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
       setResultList(results.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
       setTodayMatchList(
         matches.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+      );
+      setCategoryList(
+        categories.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
       );
     };
     getPosts();
@@ -77,11 +85,14 @@ export default function App() {
   return (
     <Router>
       <Routes>
+        {/* authentication */}
         <Route path="/login" element={<Login setIsAuth={setIsAuth} />} />
         <Route path="/loginWithPhone" element={<LoginWithPhone />} />
-        <Route path="/detail/:id" element={<Detail postList={postList} />} />
 
+        {/* home - dashboard */}
         <Route path="/" element={<Dashboard />} />
+
+        {/* news */}
         <Route
           path="/news"
           element={
@@ -90,23 +101,36 @@ export default function App() {
               deltePost={deltePost}
               postList={postList}
               authorList={authorList}
+              categoryList={categoryList}
             />
           }
         />
-        <Route path="/news_detail/:id" element={<NewsDetail />} />
+        <Route
+          path="/news_detail/:id"
+          element={<NewsDetail categoryList={categoryList} />}
+        />
         <Route
           path="/create_news"
           element={
-            <CreateNews setIsUpdated={setIsUpdated} authorList={authorList} />
+            <CreateNews
+              setIsUpdated={setIsUpdated}
+              authorList={authorList}
+              categoryList={categoryList}
+            />
           }
         />
         <Route
           path="/update_news/:post"
           element={
-            <UpdateNews setIsUpdated={setIsUpdated} authorList={authorList} />
+            <UpdateNews
+              setIsUpdated={setIsUpdated}
+              authorList={authorList}
+              categoryList={categoryList}
+            />
           }
         />
 
+        {/* author */}
         <Route
           path="/authors"
           element={
@@ -126,6 +150,7 @@ export default function App() {
           element={<UpdateAuthor setIsUpdated={setIsUpdated} />}
         />
 
+        {/* football result */}
         <Route
           path="/result"
           element={
@@ -144,6 +169,8 @@ export default function App() {
           path="/update_result/:id"
           element={<UpdateResult setIsUpdated={setIsUpdated} />}
         />
+
+        {/* today match */}
         <Route
           path="/today_match"
           element={
@@ -161,6 +188,23 @@ export default function App() {
         <Route
           path="/update_match/:id"
           element={<UpdateTodayMatch setIsUpdated={setIsUpdated} />}
+        />
+
+        {/* category */}
+        <Route
+          path="/category"
+          element={
+            <Category deltePost={deltePost} categoryList={categoryList} />
+          }
+        />
+
+        <Route
+          path="/create_category"
+          element={<CreateCategory setIsUpdated={setIsUpdated} />}
+        />
+        <Route
+          path="/update_category/:id"
+          element={<UpdateCategory setIsUpdated={setIsUpdated} />}
         />
       </Routes>
     </Router>
