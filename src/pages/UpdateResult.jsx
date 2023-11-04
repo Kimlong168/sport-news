@@ -13,7 +13,7 @@ const UpdateResult = ({ setIsUpdated }) => {
 
   // const result = resultList.filter((post) => post.id === resultParam)[0];
 
-  const [title, setTitle] = useState('');
+  const [title, setTitle] = useState(null);
   const [teamA, setTeamA] = useState('');
   const [teamB, setTeamB] = useState('');
   const [teamAGoal, setTeamAGoal] = useState('');
@@ -78,7 +78,7 @@ const UpdateResult = ({ setIsUpdated }) => {
 
     
   // loading
-  if (!title) {
+  if (title === null) {
     return (
       <Layout>
         <Loading />

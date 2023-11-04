@@ -1,62 +1,109 @@
-import { auth, provider } from "../firebase-config";
-import { signInWithPopup } from "firebase/auth";
-import { Link, useNavigate } from "react-router-dom";
+import { auth } from "../firebase-config";
+// import { useNavigate } from "react-router-dom";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import PropTypes from "prop-types";
+import { useState } from "react";
 const Login = ({ setIsAuth }) => {
-  let navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  // let navigate = useNavigate();
 
-  const signIn = () => {
-    signInWithPopup(auth, provider).then((result) => {
-      console.log("login successfully", result);
-      localStorage.setItem("isAuth", true);
-      setIsAuth(true);
-      navigate("/");
-    });
+  const handleLogin = (e) => {
+    e.preventDefault();
+    signInWithEmailAndPassword(auth, email.trim(), password.trim())
+      .then((userCredential) => {
+        const user = userCredential.user;
+        console.log("login successfully:", user);
+        alert("login successfully");
+        localStorage.setItem("isAuth", true);
+        setIsAuth(true);
+        // navigate("/");
+        window.location.href = "/";
+      })
+      .catch((error) => {
+        setIsAuth(false);
+        console.log(error.message);
+        console.log(error.code);
+        alert("login fail");
+      });
   };
 
   return (
     <div>
-      <button
-        onClick={signIn}
-        aria-label="Continue with google"
-        role="button"
-        className="mx-auto focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-gray-700 py-3.5 px-4 border rounded-lg border-gray-700 flex items-center  mt-10"
-      >
-        <svg
-          width="19"
-          height="20"
-          viewBox="0 0 19 20"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M18.9892 10.1871C18.9892 9.36767 18.9246 8.76973 18.7847 8.14966H9.68848V11.848H15.0277C14.9201 12.767 14.3388 14.1512 13.047 15.0812L13.0289 15.205L15.905 17.4969L16.1042 17.5173C17.9342 15.7789 18.9892 13.221 18.9892 10.1871Z"
-            fill="#4285F4"
-          />
-          <path
-            d="M9.68813 19.9314C12.3039 19.9314 14.4999 19.0455 16.1039 17.5174L13.0467 15.0813C12.2286 15.6682 11.1306 16.0779 9.68813 16.0779C7.12612 16.0779 4.95165 14.3395 4.17651 11.9366L4.06289 11.9465L1.07231 14.3273L1.0332 14.4391C2.62638 17.6946 5.89889 19.9314 9.68813 19.9314Z"
-            fill="#34A853"
-          />
-          <path
-            d="M4.17667 11.9366C3.97215 11.3165 3.85378 10.6521 3.85378 9.96562C3.85378 9.27905 3.97215 8.6147 4.16591 7.99463L4.1605 7.86257L1.13246 5.44363L1.03339 5.49211C0.37677 6.84302 0 8.36005 0 9.96562C0 11.5712 0.37677 13.0881 1.03339 14.4391L4.17667 11.9366Z"
-            fill="#FBBC05"
-          />
-          <path
-            d="M9.68807 3.85336C11.5073 3.85336 12.7344 4.66168 13.4342 5.33718L16.1684 2.59107C14.4892 0.985496 12.3039 0 9.68807 0C5.89885 0 2.62637 2.23672 1.0332 5.49214L4.16573 7.99466C4.95162 5.59183 7.12608 3.85336 9.68807 3.85336Z"
-            fill="#EB4335"
-          />
-        </svg>
-        <p className="text-base font-medium ml-4 text-gray-700">
-          Continue with Google
-        </p>
-      </button>
-      <Link to="/loginwithPhone">
-        <button className="mx-auto focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-gray-700 py-3.5 px-4 border rounded-lg border-gray-700 flex items-center  mt-10">
-          <p className="text-base font-medium ml-4 text-gray-700">
-            Continue with Google
-          </p>
-        </button>
-      </Link>
+      <div className="h-screen flex justify-center ">
+        <div className="flex w-full lg:w-1/2 justify-center items-center bg-white space-y-8">
+          <div className="w-full px-8 md:px-32 lg:px-24">
+            <form
+              className="bg-white rounded-md shadow-2xl p-5"
+              onSubmit={(e) => handleLogin(e)}
+            >
+              <h1 className="text-gray-800 font-bold text-2xl mb-1">
+                Hello admin
+              </h1>
+              <p className="text-sm font-normal text-gray-600 mb-8">
+                Welcome Back
+              </p>
+              <div className="flex items-center border-2 mb-8 py-2 px-3 rounded-2xl">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5 text-gray-400"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"
+                  />
+                </svg>
+                <input
+                  className=" pl-2 w-full outline-none border-none cursor-text"
+                  type="email"
+                  name="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Email Address"
+                />
+              </div>
+              <div className="flex items-center border-2 mb-12 py-2 px-3 rounded-2xl ">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5 text-gray-400"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                <input
+                  className="pl-2 w-full outline-none border-none cursor-text"
+                  type="password"
+                  name="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Password"
+                />
+              </div>
+              <button
+                type="submit"
+                className="block w-full bg-indigo-600 mt-5 py-2 rounded-2xl hover:bg-indigo-700 hover:-translate-y-1 transition-all duration-500 text-white font-semibold mb-2"
+              >
+                Login
+              </button>
+              <div className="flex justify-between mt-4">
+                <span className="text-sm ml-2 hover:text-blue-500 cursor-pointer hover:-translate-y-1 duration-500 transition-all">
+                  Forgot Password ?
+                </span>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

@@ -4,8 +4,8 @@ import { useState, useEffect } from "react";
 import Login from "./pages/Login";
 // import { signOut } from "firebase/auth";
 // import { auth } from "./firebase-config";
-import LoginWithPhone from "./pages/LoginWithPhone";
-import { db } from "./firebase-config";
+
+import { auth, db } from "./firebase-config";
 import { getDocs, collection, deleteDoc, doc } from "firebase/firestore";
 // import UpdatePost from "./pages/UpdateNews";
 import Dashboard from "./pages/Dashboard";
@@ -25,6 +25,9 @@ import UpdateAuthor from "./pages/UpdateAuthor";
 import UpdateResult from "./pages/UpdateResult";
 import UpdateTodayMatch from "./pages/UpdateTodayMatch";
 import UpdateCategory from "./pages/UpdateCategory";
+import { signOut } from "firebase/auth";
+import Error404 from "./pages/Error404";
+
 export default function App() {
   const [isAuth, setIsAuth] = useState(localStorage.getItem("isAuth"));
   const [isUpdated, setIsUpdated] = useState(false);
@@ -34,14 +37,14 @@ export default function App() {
   const [resultList, setResultList] = useState([]);
   const [categoryList, setCategoryList] = useState([]);
 
-  // const signUserOut = () => {
-  //   signOut(auth).then(() => {
-  //     localStorage.clear();
-  //     console.log("Signed Out");
-  //     setIsAuth(false);
-  //     // window.location.href = "/login";
-  //   });
-  // };
+  const signUserOut = () => {
+    signOut(auth).then(() => {
+      localStorage.clear();
+      console.log("Signed Out");
+      setIsAuth(false);
+      window.location.href = "/login";
+    });
+  };
 
   useEffect(() => {
     const postCollectionRef = collection(db, "posts");
@@ -82,131 +85,152 @@ export default function App() {
     setIsUpdated((prev) => !prev);
   };
 
+  if (!isAuth) {
+    return (
+      <Router>
+        <Routes>
+          {/* authentication */}
+          <Route path="/" element={<Login setIsAuth={setIsAuth} />} />
+          <Route path="/login" element={<Login setIsAuth={setIsAuth} />} />
+          <Route path="*" element={<Error404 />} />
+        </Routes>
+      </Router>
+    );
+  }
+
   return (
-    <Router>
-      <Routes>
-        {/* authentication */}
-        <Route path="/login" element={<Login setIsAuth={setIsAuth} />} />
-        <Route path="/loginWithPhone" element={<LoginWithPhone />} />
+    <div>
+      <Router>
+        {/* logout  */}
+        <button
+          className="fixed top-4 right-4 z-50 text-white font-bold"
+          onClick={signUserOut}
+        >
+          Logout
+        </button>
+        <Routes>
+          {/* authentication */}
+          {/* <Route path="/login" element={<Login setIsAuth={setIsAuth} />} /> */}
+          <Route path="*" element={<Error404 />} />
+          {/* home - dashboard */}
+          <Route path="/" element={<Dashboard />} />
 
-        {/* home - dashboard */}
-        <Route path="/" element={<Dashboard />} />
+          {/* news */}
+          <Route
+            path="/news"
+            element={
+              <News
+                isAuth={isAuth}
+                deltePost={deltePost}
+                postList={postList}
+                authorList={authorList}
+                categoryList={categoryList}
+              />
+            }
+          />
+          <Route
+            path="/news_detail/:id"
+            element={<NewsDetail categoryList={categoryList} />}
+          />
+          <Route
+            path="/create_news"
+            element={
+              <CreateNews
+                setIsUpdated={setIsUpdated}
+                authorList={authorList}
+                categoryList={categoryList}
+              />
+            }
+          />
+          <Route
+            path="/update_news/:post"
+            element={
+              <UpdateNews
+                setIsUpdated={setIsUpdated}
+                authorList={authorList}
+                categoryList={categoryList}
+              />
+            }
+          />
 
-        {/* news */}
-        <Route
-          path="/news"
-          element={
-            <News
-              isAuth={isAuth}
-              deltePost={deltePost}
-              postList={postList}
-              authorList={authorList}
-              categoryList={categoryList}
-            />
-          }
-        />
-        <Route
-          path="/news_detail/:id"
-          element={<NewsDetail categoryList={categoryList} />}
-        />
-        <Route
-          path="/create_news"
-          element={
-            <CreateNews
-              setIsUpdated={setIsUpdated}
-              authorList={authorList}
-              categoryList={categoryList}
-            />
-          }
-        />
-        <Route
-          path="/update_news/:post"
-          element={
-            <UpdateNews
-              setIsUpdated={setIsUpdated}
-              authorList={authorList}
-              categoryList={categoryList}
-            />
-          }
-        />
+          {/* author */}
+          <Route
+            path="/authors"
+            element={
+              <Author
+                isAuth={isAuth}
+                deltePost={deltePost}
+                authorList={authorList}
+              />
+            }
+          />
+          <Route
+            path="/create_authors"
+            element={<CreateAuthor setIsUpdated={setIsUpdated} />}
+          />
+          <Route
+            path="/update_author/:id"
+            element={<UpdateAuthor setIsUpdated={setIsUpdated} />}
+          />
 
-        {/* author */}
-        <Route
-          path="/authors"
-          element={
-            <Author
-              isAuth={isAuth}
-              deltePost={deltePost}
-              authorList={authorList}
-            />
-          }
-        />
-        <Route
-          path="/create_authors"
-          element={<CreateAuthor setIsUpdated={setIsUpdated} />}
-        />
-        <Route
-          path="/update_author/:id"
-          element={<UpdateAuthor setIsUpdated={setIsUpdated} />}
-        />
+          {/* football result */}
+          <Route
+            path="/result"
+            element={
+              <Result
+                isAuth={isAuth}
+                deltePost={deltePost}
+                resultList={resultList}
+              />
+            }
+          />
+          <Route
+            path="/create_result"
+            element={<CreateResult setIsUpdated={setIsUpdated} />}
+          />
+          <Route
+            path="/update_result/:id"
+            element={<UpdateResult setIsUpdated={setIsUpdated} />}
+          />
 
-        {/* football result */}
-        <Route
-          path="/result"
-          element={
-            <Result
-              isAuth={isAuth}
-              deltePost={deltePost}
-              resultList={resultList}
-            />
-          }
-        />
-        <Route
-          path="/create_result"
-          element={<CreateResult setIsUpdated={setIsUpdated} />}
-        />
-        <Route
-          path="/update_result/:id"
-          element={<UpdateResult setIsUpdated={setIsUpdated} />}
-        />
+          {/* today match */}
+          <Route
+            path="/today_match"
+            element={
+              <TodayMatch
+                isAuth={isAuth}
+                deltePost={deltePost}
+                todayMatchList={todayMatchList}
+              />
+            }
+          />
+          <Route
+            path="/create_today_match"
+            element={<CreateTodayMatch setIsUpdated={setIsUpdated} />}
+          />
+          <Route
+            path="/update_match/:id"
+            element={<UpdateTodayMatch setIsUpdated={setIsUpdated} />}
+          />
 
-        {/* today match */}
-        <Route
-          path="/today_match"
-          element={
-            <TodayMatch
-              isAuth={isAuth}
-              deltePost={deltePost}
-              todayMatchList={todayMatchList}
-            />
-          }
-        />
-        <Route
-          path="/create_today_match"
-          element={<CreateTodayMatch setIsUpdated={setIsUpdated} />}
-        />
-        <Route
-          path="/update_match/:id"
-          element={<UpdateTodayMatch setIsUpdated={setIsUpdated} />}
-        />
+          {/* category */}
+          <Route
+            path="/category"
+            element={
+              <Category deltePost={deltePost} categoryList={categoryList} />
+            }
+          />
 
-        {/* category */}
-        <Route
-          path="/category"
-          element={
-            <Category deltePost={deltePost} categoryList={categoryList} />
-          }
-        />
-
-        <Route
-          path="/create_category"
-          element={<CreateCategory setIsUpdated={setIsUpdated} />}
-        />
-        <Route
-          path="/update_category/:id"
-          element={<UpdateCategory setIsUpdated={setIsUpdated} />}
-        />
-      </Routes>
-    </Router>
+          <Route
+            path="/create_category"
+            element={<CreateCategory setIsUpdated={setIsUpdated} />}
+          />
+          <Route
+            path="/update_category/:id"
+            element={<UpdateCategory setIsUpdated={setIsUpdated} />}
+          />
+        </Routes>
+      </Router>
+    </div>
   );
 }

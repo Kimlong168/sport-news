@@ -59,7 +59,7 @@ const News = ({ deltePost, postList, authorList, categoryList }) => {
               {postList.length == 0 && (
                 <>
                   <tr className=" text-center">
-                    <td className="py-8 " colSpan={9}>
+                    <td className="py-8 " colSpan={10}>
                       No Data
                     </td>
                   </tr>

@@ -12,7 +12,7 @@ import Loading from "../components/Loading";
 const UpdateTodayMatch = ({ setIsUpdated }) => {
   const { id: matchParam } = useParams();
 
-  const [time, setTime] = useState("");
+  const [time, setTime] = useState(null);
   const [date, setDate] = useState("");
   const [staduim, setStaduim] = useState("");
   const [liveOn, setLiveOn] = useState("");
@@ -118,7 +118,7 @@ const UpdateTodayMatch = ({ setIsUpdated }) => {
     });
 
   // loading
-  if (!time) {
+  if (time === null) {
     return (
       <Layout>
         <Loading />

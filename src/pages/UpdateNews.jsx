@@ -11,13 +11,13 @@ import PropTypes from "prop-types";
 const UpdateNews = ({ setIsUpdated, authorList, categoryList }) => {
   const { post: postParam } = useParams();
 
-  const [title, setTitle] = useState("");
+  const [title, setTitle] = useState(null);
   const [img, setImg] = useState("");
   const [tags, setTags] = useState("");
   const [description, setDescription] = useState("");
   const [content, setContent] = useState("");
   const [authorName, setAuthorName] = useState("");
-  const [categoryId, setCategoryId] = useState('');
+  const [categoryId, setCategoryId] = useState("");
   const [selectedTab, setSelectedTab] = useState("write");
   let navigate = useNavigate();
 
@@ -92,7 +92,7 @@ const UpdateNews = ({ setIsUpdated, authorList, categoryList }) => {
   });
 
   // loading
-  if (!title) {
+  if (title === null) {
     return (
       <Layout>
         <Loading />

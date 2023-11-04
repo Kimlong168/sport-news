@@ -19,7 +19,7 @@ const UpdateAuthor = ({ setIsUpdated }) => {
   const { id: authorParam } = useParams();
   // const author = authorList.filter((post) => post.id === authorParam)[0];
 
-  const [fullName, setfullName] = useState("");
+  const [fullName, setfullName] = useState(null);
   const [profilePicture, setProfilePicture] = useState(null);
   const [bio, setBio] = useState("");
   const [position, setPosition] = useState("");
@@ -136,7 +136,7 @@ const UpdateAuthor = ({ setIsUpdated }) => {
   }
 
   // loading
-  if (!fullName) {
+  if (fullName === null) {
     return (
       <Layout>
         <Loading />

@@ -6,7 +6,7 @@ import { db } from "../firebase-config";
 import Loading from "../components/Loading";
 import Markdown from "react-markdown";
 import PropTypes from "prop-types";
-import Category from "./Category";
+
 const NewsDetail = ({ categoryList }) => {
   const { id: newsParams } = useParams();
 
