@@ -19,7 +19,7 @@ const Layout = (props) => {
     <div>
       <div className="min-h-screen flex flex-col flex-auto flex-shrink-0 antialiased  text-white">
         <div className="fixed w-full flex items-center justify-between h-14 text-white z-10">
-          <div className="flex items-center justify-start md:justify-center pl-3 w-14 md:w-64 h-14 bg-blue-800 dark:bg-gray-800 border-none">
+          <div className="flex items-center justify-start md:justify-center pl-3 w-14 md:w-64 h-14 bg-gray-800 border-none">
             <span className="hidden md:block">Hello {displayName}</span>
           </div>
           {/* logout */}
@@ -206,7 +206,7 @@ const Layout = (props) => {
           </div>
         </div>
 
-        <div className="h-full ml-14 mt-14 mb-10 md:ml-64 p-10 pt-5">
+        <div className="h-full ml-14 mt-14 mb-10 md:ml-64 p-2 md:p-4 lg:p-10 pt-5">
           {props.children}
         </div>
       </div>
