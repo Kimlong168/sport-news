@@ -60,10 +60,10 @@ const CreateTodayMatch = ({ setIsUpdated }) => {
           Create Today Match
         </div>
         <br />
-        <section className="p-8 pt-0">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <div className="flex-1">
-              <label className="font-bold mb-2 text-xl">Date</label>
+        <section className="pt-0">
+          <div className="flex flex-col md:flex-row items-center justify-between md:gap-4">
+            <div className="flex-1 w-full">
+              <label className="font-bold mb-2 text-xl ">Date</label>
               <input
                 type="date"
                 className="border border-gray-700  uppercase p-2 rounded w-full outline-none mb-5 "
@@ -71,8 +71,8 @@ const CreateTodayMatch = ({ setIsUpdated }) => {
                 onChange={(e) => setDate(e.target.value)}
               />
             </div>
-            <div className="flex-1">
-              <label className="font-bold mb-2 text-xl">Time</label>
+            <div className="flex-1 w-full">
+              <label className="font-bold mb-2 text-xl ">Time</label>
               <input
                 type="time"
                 placeholder="Time to kick off"
@@ -83,9 +83,9 @@ const CreateTodayMatch = ({ setIsUpdated }) => {
             </div>
           </div>
 
-          <div className="flex  flex-col md:flex-row items-center justify-between gap-4">
-            <div className="flex-1">
-              <label className="font-bold mb-2 text-xl">Team A</label>
+          <div className="flex  flex-col md:flex-row items-center justify-between md:gap-4">
+            <div className="flex-1 w-full">
+              <label className="font-bold mb-2 text-xl ">Team A</label>
               <input
                 type="text"
                 className="border border-gray-700  uppercase p-2 rounded w-full outline-none mb-5"
@@ -94,8 +94,8 @@ const CreateTodayMatch = ({ setIsUpdated }) => {
               />
             </div>
 
-            <div className="flex-1">
-              <label className="font-bold mb-2 text-xl">Team B</label>
+            <div className="flex-1 w-full">
+              <label className="font-bold mb-2 text-xl ">Team B</label>
               <input
                 type="text"
                 className="border border-gray-700  uppercase p-2 rounded w-full outline-none mb-5"
@@ -105,14 +105,14 @@ const CreateTodayMatch = ({ setIsUpdated }) => {
             </div>
           </div>
 
-          <label className="font-bold mb-2 text-xl">Staduim</label>
+          <label className="font-bold mb-2 text-xl ">Staduim</label>
           <input
             type="text"
             className="border border-gray-700  uppercase p-2 rounded w-full outline-none mb-5"
             value={staduim}
             onChange={(e) => setStaduim(e.target.value)}
           />
-          <label className="font-bold mb-2 text-xl">Live On</label>
+          <label className="font-bold mb-2 text-xl ">Live On</label>
           <input
             type="text"
             placeholder="Optional"

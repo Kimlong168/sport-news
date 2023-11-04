@@ -93,7 +93,7 @@ const UpdateResult = ({ setIsUpdated }) => {
           Update Football Result
         </div>
         <br />
-        <section className="p-8 pt-0">
+        <section className="pt-0">
           <input
             type="text"
             placeholder="Title eg(CPL, Laliga, EPL, AFC-Cup,...)"

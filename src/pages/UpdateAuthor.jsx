@@ -152,7 +152,7 @@ const UpdateAuthor = ({ setIsUpdated }) => {
         </div>
 
         <div className="bg-errorPage bg-no-repeat bg-cover bg-fixed bg-bottom  ">
-          <div className="w-full flex flex-col  border border-white/50 rounded-3xl p-8">
+          <div className="w-full flex flex-col  border border-white/50 rounded-3xl">
             <label className="font-bold text-xl">Full Name:</label>
             <input
               className="border border-gray-700 p-2 rounded w-full outline-none mb-5"

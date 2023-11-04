@@ -89,7 +89,7 @@ const CreateNews = ({ setIsUpdated, authorList, categoryList }) => {
           Create News
         </div>
         <br />
-        <section className="p-8">
+        <section >
           <label className="font-bold mb-2 text-xl">Title</label>
           <input
             type="text"

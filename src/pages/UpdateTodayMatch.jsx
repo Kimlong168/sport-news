@@ -133,7 +133,7 @@ const UpdateTodayMatch = ({ setIsUpdated }) => {
           Update Today Match
         </div>
         <br />
-        <section className="p-8 pt-0">
+        <section className="pt-0">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex-1">
               <label className="font-bold mb-2 text-xl">Date</label>

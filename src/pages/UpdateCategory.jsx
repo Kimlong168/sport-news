@@ -82,7 +82,7 @@ const UpdateCategory = ({ setIsUpdated }) => {
           Update Category
         </div>
         <br />
-        <section className="p-8 pt-0">
+        <section className="pt-0">
           <label className="font-bold text-xl">Category Name:</label>
           <input
             type="text"

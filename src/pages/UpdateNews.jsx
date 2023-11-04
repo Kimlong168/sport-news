@@ -107,7 +107,7 @@ const UpdateNews = ({ setIsUpdated, authorList, categoryList }) => {
           Update News
         </div>
         <br />
-        <section className="p-8 pt-0">
+        <section className="pt-0">
           <label className="font-bold mb-2 text-xl">Title</label>
           <input
             type="text"
