@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { setDoc, doc, getDoc } from "firebase/firestore";
+import { ToastContainer, toast } from "react-toastify";
 import { db, storage } from "../firebase-config";
 import {
   ref,
@@ -134,7 +135,17 @@ const UpdateAuthor = ({ setIsUpdated }) => {
     );
     setIsUpdated((prev) => !prev);
   }
-
+  const notify = () =>
+    toast.error("Fill all required fields!", {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+    });
   // loading
   if (fullName === null) {
     return (
@@ -238,7 +249,7 @@ const UpdateAuthor = ({ setIsUpdated }) => {
             ) : (
               <button
                 className="bg-gray-700 w-full text-white font-bold p-2 mt-2 rounded"
-                onClick={() => alert("Fill all required fields")}
+                onClick={notify}
               >
                 Update Author
               </button>
@@ -246,6 +257,19 @@ const UpdateAuthor = ({ setIsUpdated }) => {
           </div>
         </div>
       </div>
+
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
     </Layout>
   );
 };

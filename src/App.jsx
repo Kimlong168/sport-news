@@ -6,7 +6,14 @@ import Login from "./pages/Login";
 // import { auth } from "./firebase-config";
 
 import { auth, db } from "./firebase-config";
-import { getDocs, collection, deleteDoc, doc } from "firebase/firestore";
+import {
+  getDocs,
+  collection,
+  deleteDoc,
+  doc,
+  query,
+  orderBy,
+} from "firebase/firestore";
 // import UpdatePost from "./pages/UpdateNews";
 import Dashboard from "./pages/Dashboard";
 import News from "./pages/News";
@@ -27,7 +34,12 @@ import UpdateTodayMatch from "./pages/UpdateTodayMatch";
 import UpdateCategory from "./pages/UpdateCategory";
 import { signOut } from "firebase/auth";
 import Error404 from "./pages/Error404";
-
+import CreateClub from "./pages/CreateClub";
+import Club from "./pages/Club";
+import UpdateClub from "./pages/UpdateClub";
+import CreateGroup from "./pages/CreateGroup";
+import Group from "./pages/Group";
+import UpdateGroup from "./pages/UpdateGroup";
 export default function App() {
   const [isAuth, setIsAuth] = useState(localStorage.getItem("isAuth"));
   const [isUpdated, setIsUpdated] = useState(false);
@@ -36,6 +48,8 @@ export default function App() {
   const [todayMatchList, setTodayMatchList] = useState([]);
   const [resultList, setResultList] = useState([]);
   const [categoryList, setCategoryList] = useState([]);
+  const [clubList, setClubList] = useState([]);
+  const [groupList, setGroupList] = useState([]);
 
   const signUserOut = () => {
     signOut(auth).then(() => {
@@ -52,17 +66,25 @@ export default function App() {
     const resultCollectionRef = collection(db, "results");
     const todayMatchCollectionRef = collection(db, "todayMatch");
     const categoryCollectionRef = collection(db, "categories");
+    const clubCollectionRef = collection(db, "clubs");
+    const groupCollectionRef = collection(db, "groups");
     const getPosts = async () => {
       const authors = await getDocs(authorCollectionRef);
       const posts = await getDocs(postCollectionRef);
       const results = await getDocs(resultCollectionRef);
       const matches = await getDocs(todayMatchCollectionRef);
       const categories = await getDocs(categoryCollectionRef);
+      const clubs = await getDocs(
+        query(clubCollectionRef, orderBy("group"))
+      );
+      const groups = await getDocs(groupCollectionRef);
       console.log("posts", posts);
       console.log("auhtors", authors);
       console.log("football_results", results);
       console.log("today_match", matches);
       console.log("categories", categories);
+      console.log("clubs", clubs);
+      console.log("groups", groups);
       setPostList(posts.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
       setAuthorList(authors.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
       setResultList(results.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
@@ -72,6 +94,8 @@ export default function App() {
       setCategoryList(
         categories.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
       );
+      setClubList(clubs.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+      setGroupList(groups.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
     };
     getPosts();
   }, [isUpdated]);
@@ -156,13 +180,7 @@ export default function App() {
           {/* author */}
           <Route
             path="/authors"
-            element={
-              <Author
-                isAuth={isAuth}
-                deltePost={deltePost}
-                authorList={authorList}
-              />
-            }
+            element={<Author deltePost={deltePost} authorList={authorList} />}
           />
           <Route
             path="/create_authors"
@@ -228,6 +246,52 @@ export default function App() {
           <Route
             path="/update_category/:id"
             element={<UpdateCategory setIsUpdated={setIsUpdated} />}
+          />
+
+          {/* club */}
+          <Route
+            path="/club"
+            element={
+              <Club
+                deltePost={deltePost}
+                clubList={clubList}
+                groupList={groupList}
+              />
+            }
+          />
+          <Route
+            path="/create_club"
+            element={
+              <CreateClub
+                setIsUpdated={setIsUpdated}
+                clubList={clubList}
+                groupList={groupList}
+              />
+            }
+          />
+          <Route
+            path="/update_club/:id"
+            element={
+              <UpdateClub
+                setIsUpdated={setIsUpdated}
+                clubList={clubList}
+                groupList={groupList}
+              />
+            }
+          />
+
+          {/* group */}
+          <Route
+            path="/group"
+            element={<Group deltePost={deltePost} groupList={groupList} />}
+          />
+          <Route
+            path="/create_group"
+            element={<CreateGroup setIsUpdated={setIsUpdated} />}
+          />
+          <Route
+            path="/update_group/:id"
+            element={<UpdateGroup setIsUpdated={setIsUpdated} />}
           />
         </Routes>
       </Router>

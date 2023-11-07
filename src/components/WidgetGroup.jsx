@@ -2,6 +2,8 @@ import Widget from "../components/Widget";
 import { BiNews, BiFootball, BiCategoryAlt } from "react-icons/bi";
 import { FiUsers } from "react-icons/fi";
 import { PiBellRingingBold } from "react-icons/pi";
+import { PiClubBold } from "react-icons/pi";
+import { TbTopologyFull } from "react-icons/tb";
 import { Link } from "react-router-dom";
 
 const WidgetGroup = () => {
@@ -25,7 +27,18 @@ const WidgetGroup = () => {
         />
       </Link>
       <Link to="/create_category">
-        <Widget title="Category" color="bg-yellow-400" icon={<BiCategoryAlt />} />
+        <Widget
+          title="Category"
+          color="bg-yellow-400"
+          icon={<BiCategoryAlt />}
+        />
+      </Link>
+      <Link to="/create_club">
+        <Widget title="Club" color="bg-pink-500" icon={<PiClubBold />} />
+      </Link>
+
+      <Link to="/create_group">
+        <Widget title="Group" color="bg-gray-400" icon={<TbTopologyFull />} />
       </Link>
     </div>
   );
