@@ -10,24 +10,29 @@ import "react-toastify/dist/ReactToastify.css";
 import { BsTrash } from "react-icons/bs";
 import { IoMdAddCircleOutline } from "react-icons/io";
 import PropTypes from "prop-types";
+import { useEffect } from "react";
 
 const CreateClub = ({ setIsUpdated, clubList, groupList }) => {
   const [clubName, setclubName] = useState("");
   const [shortName, setShortName] = useState("");
   const [logo, setLogo] = useState(null);
   const [description, setDescription] = useState("");
-  const [group, setGroup] = useState(groupList[0].id);
-  const [numMatch, setNumMatch] = useState(0);
+  const [group, setGroup] = useState("");
+  const [numLost, setNumLost] = useState(0);
   const [numWin, setNumWin] = useState(0);
   const [numDraw, setNumDraw] = useState(0);
-  const [numGA, setGA] = useState(0);
-  const [numGF, setGF] = useState(0);
+  const [numGA, setNumGA] = useState(0);
+  const [numGF, setNumGF] = useState(0);
   const [nextGame, setNextGame] = useState("");
   const [form, setForm] = useState([
     // {
     //   result: "",
     // },
   ]);
+
+  useEffect(() => {
+    setGroup(groupList[0]?.id);
+  }, [groupList]);
 
   const clubs = clubList.filter(
     (club) => club.clubName.toLowerCase() != clubName.toLowerCase()
@@ -58,7 +63,7 @@ const CreateClub = ({ setIsUpdated, clubList, groupList }) => {
       shortName === "" ||
       logo === "" ||
       group === "" ||
-      numMatch === "" ||
+      numLost === "" ||
       numWin === "" ||
       numDraw === "" ||
       numGA === "" ||
@@ -105,11 +110,14 @@ const CreateClub = ({ setIsUpdated, clubList, groupList }) => {
       shortName: shortName,
       description: description,
       group: group,
-      numMatch: numMatch,
+      point: parseInt(numWin) * 3 + parseInt(numDraw),
+      numMatch: parseInt(numDraw) + parseInt(numLost) + parseInt(numWin),
+      numLost: numLost,
       numWin: numWin,
       numDraw: numDraw,
       numGA: numGA,
       numGF: numGF,
+      numGD: parseInt(numGF) - parseInt(numGA),
       nextGame: nextGame,
       form: form,
       clubId: generatedID,
@@ -190,19 +198,7 @@ const CreateClub = ({ setIsUpdated, clubList, groupList }) => {
             </select>
             <div className="grid grid-cols-5 auto-rows-auto gap-3">
               <div>
-                <label className="font-bold text-xl">Total:</label>
-                <input
-                  min={0}
-                  placeholder="Number of match"
-                  className="border border-gray-700 p-2 rounded w-full outline-none mb-5"
-                  type="number"
-                  value={numMatch}
-                  onChange={(e) => setNumMatch(e.target.value)}
-                />
-              </div>
-
-              <div>
-                <label className="font-bold text-xl">Victory:</label>
+                <label className="font-bold text-xl">Win:</label>
                 <input
                   min={0}
                   placeholder=" Number of Victory game"
@@ -210,6 +206,17 @@ const CreateClub = ({ setIsUpdated, clubList, groupList }) => {
                   type="number"
                   value={numWin}
                   onChange={(e) => setNumWin(e.target.value)}
+                />
+              </div>
+              <div>
+                <label className="font-bold text-xl">Lost:</label>
+                <input
+                  min={0}
+                  placeholder="Number of match"
+                  className="border border-gray-700 p-2 rounded w-full outline-none mb-5"
+                  type="number"
+                  value={numLost}
+                  onChange={(e) => setNumLost(e.target.value)}
                 />
               </div>
 
@@ -236,7 +243,7 @@ const CreateClub = ({ setIsUpdated, clubList, groupList }) => {
                   className="border border-gray-700 p-2 rounded w-full outline-none mb-5"
                   type="number"
                   value={numGA}
-                  onChange={(e) => setGA(e.target.value)}
+                  onChange={(e) => setNumGA(e.target.value)}
                 />
               </div>
 
@@ -252,7 +259,7 @@ const CreateClub = ({ setIsUpdated, clubList, groupList }) => {
                   className="border border-gray-700 p-2 rounded w-full outline-none mb-5"
                   type="number"
                   value={numGF}
-                  onChange={(e) => setGF(e.target.value)}
+                  onChange={(e) => setNumGF(e.target.value)}
                 />
               </div>
             </div>

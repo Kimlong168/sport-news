@@ -74,9 +74,7 @@ export default function App() {
       const results = await getDocs(resultCollectionRef);
       const matches = await getDocs(todayMatchCollectionRef);
       const categories = await getDocs(categoryCollectionRef);
-      const clubs = await getDocs(
-        query(clubCollectionRef, orderBy("group"))
-      );
+      const clubs = await getDocs(query(clubCollectionRef, orderBy("group")));
       const groups = await getDocs(groupCollectionRef);
       console.log("posts", posts);
       console.log("auhtors", authors);
@@ -109,13 +107,49 @@ export default function App() {
     setIsUpdated((prev) => !prev);
   };
 
+  // // local storage
+  // function setItemWithExpiry(key, value, expiryMinutes) {
+  //   const now = new Date();
+  //   const item = {
+  //     value: value,
+  //     expiry: now.getTime() + expiryMinutes * 60 * 1000, // Convert minutes to milliseconds
+  //   };
+  //   localStorage.setItem(key, JSON.stringify(item));
+  // }
+
+  // function getItemWithExpiry(key) {
+  //   const itemString = localStorage.getItem(key);
+  //   if (!itemString) {
+  //     return null;
+  //   }
+
+  //   const item = JSON.parse(itemString);
+  //   const now = new Date();
+
+  //   if (now.getTime() > item.expiry) {
+  //     // If the item has expired, remove it from localStorage
+  //     localStorage.removeItem(key);
+  //     return null;
+  //   }
+
+  //   return item.value;
+  // }
+
   if (!isAuth) {
     return (
       <Router>
         <Routes>
           {/* authentication */}
           <Route path="/" element={<Login setIsAuth={setIsAuth} />} />
-          <Route path="/login" element={<Login setIsAuth={setIsAuth} />} />
+          <Route
+            path="/login"
+            element={
+              <Login
+                setIsAuth={setIsAuth}
+            
+              />
+            }
+          />
           <Route path="*" element={<Error404 />} />
         </Routes>
       </Router>

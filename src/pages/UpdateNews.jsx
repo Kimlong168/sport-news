@@ -50,9 +50,6 @@ const UpdateNews = ({ setIsUpdated, authorList, categoryList }) => {
   }, [postParam]);
 
   //date
-  const currentDate = new Date();
-  const options = { year: "numeric", month: "long", day: "numeric" };
-  const formattedDate = currentDate.toLocaleDateString(undefined, options);
 
   async function updateNews(id) {
     const docRef = doc(db, "posts", id);
@@ -65,7 +62,6 @@ const UpdateNews = ({ setIsUpdated, authorList, categoryList }) => {
         description: description,
         content: content,
         img: img,
-        date: formattedDate,
         categoryId: categoryId,
         tags: tags.replace(/\s/g, ""),
         author: {

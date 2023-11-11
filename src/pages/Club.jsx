@@ -67,7 +67,7 @@ const club = ({ deltePost, clubList, groupList }) => {
                 <th className="px-4 py-3">Club </th>
                 <th className="px-4 py-3">Abbreviation </th>
                 <th className="px-4 py-3">Logo</th>
-                <th className="px-4 py-3">Description</th>
+                {/* <th className="px-4 py-3">Description</th> */}
                 <th className="px-4 py-3">Group</th>
                 <th className="px-4 py-3">Played</th>
                 <th className="px-4 py-3">Won</th>
@@ -111,11 +111,11 @@ const club = ({ deltePost, clubList, groupList }) => {
                         />
                       </div>
                     </td>
-                    <td className="px-4 py-3">
+                    {/* <td className="px-4 py-3">
                       <div className="line-clamp-1 break-all hover:line-clamp-none max-w-[300px] cursor-pointer transition-all transition-delay-300">
                         {post.description}
                       </div>
-                    </td>
+                    </td> */}
 
                     <td className="px-4 py-3">
                       {groupList &&
@@ -128,13 +128,11 @@ const club = ({ deltePost, clubList, groupList }) => {
                     <td className="px-4 py-3">{post.numMatch}</td>
                     <td className="px-4 py-3">{post.numWin}</td>
                     <td className="px-4 py-3">{post.numDraw}</td>
-                    <td className="px-4 py-3">{post.numWin - post.numDraw}</td>
-                    <td className="px-4 py-3">{post.numGA}</td>
+                    <td className="px-4 py-3">{post.numLost}</td>
                     <td className="px-4 py-3">{post.numGF}</td>
-                    <td className="px-4 py-3">{post.numGA - post.numGF}</td>
-                    <td className="px-4 py-3">
-                      {post.numWin * 3 + post.numDraw}
-                    </td>
+                    <td className="px-4 py-3">{post.numGA}</td>
+                    <td className="px-4 py-3">{post.numGD}</td>
+                    <td className="px-4 py-3">{post.point}</td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2">
                         {post.form.map((form) => {

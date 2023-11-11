@@ -24,7 +24,7 @@ const UpdateClub = ({ setIsUpdated, clubList, groupList }) => {
   const [logo, setLogo] = useState(null);
   const [description, setDescription] = useState("");
   const [group, setGroup] = useState("");
-  const [numMatch, setNumMatch] = useState(0);
+  const [numLost, setNumLost] = useState(0);
   const [numWin, setNumWin] = useState(0);
   const [numDraw, setNumDraw] = useState(0);
   const [numGA, setGA] = useState(0);
@@ -68,7 +68,7 @@ const UpdateClub = ({ setIsUpdated, clubList, groupList }) => {
           setGroup(data.group);
           setForm(data.form);
           setNextGame(data.nextGame);
-          setNumMatch(data.numMatch);
+          setNumLost(data.numLost);
           setNumWin(data.numWin);
           setNumDraw(data.numDraw);
           setGA(data.numGA);
@@ -129,11 +129,14 @@ const UpdateClub = ({ setIsUpdated, clubList, groupList }) => {
           shortName: shortName,
           description: description,
           group: group,
-          numMatch: numMatch,
+          point: parseInt(numWin) * 3 + parseInt(numDraw),
+          numMatch: parseInt(numDraw) + parseInt(numLost) + parseInt(numWin),
+          numLost: numLost,
           numWin: numWin,
           numDraw: numDraw,
           numGA: numGA,
           numGF: numGF,
+          numGD: parseInt(numGF) - parseInt(numGA),
           nextGame: nextGame,
           form: form,
         },
@@ -156,11 +159,14 @@ const UpdateClub = ({ setIsUpdated, clubList, groupList }) => {
         logo: downloadURL,
         description: description,
         group: group,
-        numMatch: numMatch,
+        point: parseInt(numWin) * 3 + parseInt(numDraw),
+        numMatch: parseInt(numDraw) + parseInt(numLost) + parseInt(numWin),
+        numLost: numLost,
         numWin: numWin,
         numDraw: numDraw,
         numGA: numGA,
         numGF: numGF,
+        numGD: parseInt(numGF) - parseInt(numGA),
         nextGame: nextGame,
         form: form,
       },
@@ -245,19 +251,7 @@ const UpdateClub = ({ setIsUpdated, clubList, groupList }) => {
             </select>
             <div className="grid grid-cols-5 auto-rows-auto gap-3">
               <div>
-                <label className="font-bold text-xl">Total:</label>
-                <input
-                  min={0}
-                  placeholder="Number of match"
-                  className="border border-gray-700 p-2 rounded w-full outline-none mb-5"
-                  type="number"
-                  value={numMatch}
-                  onChange={(e) => setNumMatch(e.target.value)}
-                />
-              </div>
-
-              <div>
-                <label className="font-bold text-xl">Victory:</label>
+                <label className="font-bold text-xl">Win:</label>
                 <input
                   min={0}
                   placeholder=" Number of Victory game"
@@ -267,7 +261,17 @@ const UpdateClub = ({ setIsUpdated, clubList, groupList }) => {
                   onChange={(e) => setNumWin(e.target.value)}
                 />
               </div>
-
+              <div>
+                <label className="font-bold text-xl">Lost:</label>
+                <input
+                  min={0}
+                  placeholder="Number of match"
+                  className="border border-gray-700 p-2 rounded w-full outline-none mb-5"
+                  type="number"
+                  value={numLost}
+                  onChange={(e) => setNumLost(e.target.value)}
+                />
+              </div>
               <div>
                 <label className="font-bold text-xl">Draw</label>
                 <input

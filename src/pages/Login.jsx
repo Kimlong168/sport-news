@@ -16,6 +16,7 @@ const Login = ({ setIsAuth }) => {
         console.log("login successfully:", user);
         alert("login successfully");
         localStorage.setItem("isAuth", true);
+        // setItemWithExpiry("isAuth", true, 4); //3 days
         setIsAuth(true);
         // navigate("/");
         window.location.href = "/";
